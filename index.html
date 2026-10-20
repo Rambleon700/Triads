@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guitar Triads Explorer & Masterclass</title>
+    <style>
+        /* Modern Dark Theme CSS Palette & Reset */
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --border-color: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --color-root: #06b6d4;      /* Cyan */
+            --color-third: #f59e0b;     /* Amber */
+            --color-fifth: #ec4899;     /* Pink */
+            --color-accent: #38bdf8;    /* Light Blue */
+            --color-success: #10b981;   /* Emerald */
+            --wood-dark: #1c1917;
+            --fret-wire: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* App Main Navigation Bar */
+        .app-navbar {
+            background-color: #0b1329;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 60px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.15rem;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            height: 100%;
+        }
+
+        .nav-tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+            height: 100%;
+            border-radius: 0;
+        }
+
+        .nav-tab-btn:hover {
+            color: var(--text-main);
+            background-color: rgba(255,255,255,0.03);
+        }
+
+        .nav-tab-btn.active {
+            color: var(--color-accent);
+            border-bottom-color: var(--color-accent);
+            background-color: rgba(56, 189, 248, 0.05);
+        }
+
+        /* View Container Switching */
+        .view-page {
+            display: none;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+
+        .view-page.active-view {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Shared Buttons & Inputs */
+        button {
+            background-color: #0284c7;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        button:hover {
+            background-color: #0369a1;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.btn-secondary {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        button.btn-secondary:hover {
+            background-color: var(--bg-card-hover);
+        }
+
+        button.btn-accent {
+            background-color: #059669;
+        }
+
+        button.btn-accent:hover {
+            background-color: #047857;
+        }
+
+        select {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        select:focus {
+            border-color: var(--color-accent);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--bg-card);
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .volume-control input[type="range"] {
+            width: 70px;
+            accent-color: var(--color-accent);
+            cursor: pointer;
+        }
+
+        /* PAGE 1: TOOL LAYOUT & CONTROLS */
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .control-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-card label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .btn-toggle-group {
+            display: flex;
+            background-color: var(--bg-dark);
+            padding: 3px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-toggle-group button {
+            flex: 1;
+            padding: 6px;
+            font-size: 0.75rem;
+            background: transparent;
+            color: var(--text-muted);
+            border-radius: 4px;
+            justify-content: center;
+        }
+
+        .btn-toggle-group button.active {
+            background-color: #0284c7;
+            color: #ffffff;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, rgba(30,41,59,1) 0%, rgba(15,23,42,1) 100%);
+            border-left: 4px solid var(--color-root);
+        }
+
+        .summary-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .summary-notes {
+            font-family: monospace;
+            font-size: 0.95rem;
+            color: var(--color-accent);
+        }
+
+        .legend {
+            display: flex;
+            gap: 12px;
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* 24-Fret Guitar Fretboard */
+        .fretboard-wrapper {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px 15px 15px 15px;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .fretboard-container {
+            min-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        .fret-numbers {
+            display: flex;
+            padding-left: 40px;
+            margin-bottom: 6px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .fret-number-cell {
+            flex: 1;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .fret-number-cell.nut {
+            width: 40px;
+            flex: none;
+        }
+
+        .neck {
+            position: relative;
+            background-color: var(--wood-dark);
+            border-top: 3px solid var(--fret-wire);
+            border-bottom: 3px solid var(--fret-wire);
+            border-radius: 4px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        .strings-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+
+        .string-row {
+            display: flex;
+            align-items: center;
+            height: 38px;
+            position: relative;
+        }
+
+        .string-wire {
+            position: absolute;
+            left: 40px;
+            right: 0;
+            background: linear-gradient(0deg, #94a3b8, #cbd5e1);
+            z-index: 1;
+            pointer-events: none;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .tuning-label {
+            width: 40px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #f1f5f9;
+            background-color: #090d16;
+            border-right: 4px solid #d97706;
+            z-index: 3;
+        }
+
+        .fret-cell {
+            flex: 1;
+            height: 100%;
+            border-right: 2px solid var(--fret-wire);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .fret-cell.nut-cell {
+            width: 40px;
+            flex: none;
+            background-color: rgba(255,255,255,0.03);
+            border-right: 4px solid #d97706;
+        }
+
+        .inlay-layer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 40px;
+            right: 0;
+            pointer-events: none;
+            z-index: 1;
+            display: flex;
+        }
+
+        .inlay-cell {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inlay-dot {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+        }
+
+        .inlay-double {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .note-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: monospace;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+            transition: transform 0.15s ease, filter 0.15s ease;
+            z-index: 4;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .note-badge:hover {
+            transform: scale(1.2);
+            filter: brightness(1.2);
+        }
+
+        .note-badge.role-root {
+            background-color: var(--color-root);
+            color: #042f2e;
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.8);
+        }
+
+        .note-badge.role-third {
+            background-color: var(--color-third);
+            color: #451a03;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
+        }
+
+        .note-badge.role-fifth {
+            background-color: var(--color-fifth);
+            color: #500724;
+            box-shadow: 0 0 8px rgba(236, 72, 153, 0.8);
+        }
+
+        .note-badge.ghost-note {
+            opacity: 0.35;
+            transform: scale(0.85);
+            box-shadow: none;
+        }
+
+        .note-badge.ghost-note:hover {
+            opacity: 0.9;
+            transform: scale(1.1);
+        }
+
+        .shapes-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .shapes-header {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .voice-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .voice-card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .voice-card.selected {
+            border-color: var(--color-root);
+            background-color: #162438;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-inversion {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .card-stringset {
+            font-size: 0.7rem;
+            background-color: var(--bg-dark);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--color-accent);
+            font-family: monospace;
+            border: 1px solid var(--border-color);
+        }
+
+        .card-notes {
+            font-family: monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--color-root);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 6px;
+        }
+
+        .card-play-btn {
+            background: transparent;
+            color: var(--color-accent);
+            border: 1px solid var(--color-accent);
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            border-radius: 4px;
+        }
+
+        .card-play-btn:hover {
+            background-color: var(--color-accent);
+            color: var(--bg-dark);
+        }
+
+        /* PAGE 2: TUTORIAL STYLING */
+        .tutorial-container {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .tutorial-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tutorial-sidebar {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            position: sticky;
+            top: 80px;
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .toc-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: block;
+            transition: all 0.2s ease;
+        }
+
+        .toc-link:hover {
+            color: var(--text-main);
+            background-color: var(--bg-card-hover);
+        }
+
+        .tutorial-content {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .tutorial-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scroll-margin-top: 80px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .section-num {
+            background-color: #0284c7;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .tutorial-text {
+            color: #cbd5e1;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .formula-table-container {
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .formula-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .formula-table th, .formula-table td {
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        .formula-table th {
+            background-color: #0f172a;
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        .formula-table tr:nth-child(even) {
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        .diagram-box {
+            background-color: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 10px 0;
+        }
+
+        .diagram-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .tab-box {
+            font-family: monospace;
+            white-space: pre;
+            background-color: #090d16;
+            color: #38bdf8;
+            padding: 14px;
+            border-radius: 6px;
+            border: 1px solid #1e293b;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+
+        .interactive-demo-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #0b1329;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 10px;
+        }
+
+        .demo-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .demo-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .demo-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            background-color: var(--bg-card);
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <nav class="app-navbar">
+        <div class="nav-brand">
+            <span>🎸</span> Guitar Triads Suite
+        </div>
+        <div class="nav-tabs">
+            <button class="nav-tab-btn active" id="tab-tool" onclick="switchTab('tool')">
+                <span>🎛️</span> Interactive Visualizer
+            </button>
+            <button class="nav-tab-btn" id="tab-tutorial" onclick="switchTab('tutorial')">
+                <span>📚</span> Masterclass Tutorial
+            </button>
+        </div>
+    </nav>
+
+    <!-- PAGE 1: INTERACTIVE TOOL VIEW -->
+    <main id="page-tool" class="view-page active-view">
+        <header class="tool-header">
+            <div>
+                <h1 style="font-size: 1.4rem; font-weight: 700;">Triad Fretboard Explorer</h1>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Explore, filter, and hear closed-position triads across all keys and string sets</p>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button id="btn-strum">▶ Strum Selected</button>
+                <button id="btn-arpeggio" class="btn-secondary">📈 Arpeggiate</button>
+                <div class="volume-control">
+                    <span>Vol</span>
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.7">
+                </div>
+            </div>
+        </header>
+
+        <!-- Controls Dashboard Grid -->
+        <section class="controls-grid">
+            <div class="control-card">
+                <label for="select-key">Key / Root</label>
+                <select id="select-key"></select>
+            </div>
+
+            <div class="control-card">
+                <label for="select-quality">Triad Quality</label>
+                <select id="select-quality">
+                    <option value="Major">Major (1 - 3 - 5)</option>
+                    <option value="Minor">Minor (1 - b3 - 5)</option>
+                    <option value="Diminished">Diminished (1 - b3 - b5)</option>
+                    <option value="Augmented">Augmented (1 - 3 - #5)</option>
+                    <option value="Sus2">Sus2 (1 - 2 - 5)</option>
+                    <option value="Sus4">Sus4 (1 - 4 - 5)</option>
+                </select>
+            </div>
+
+            <div class="control-card">
+                <label for="select-stringset">String Set Filter</label>
+                <select id="select-stringset">
+                    <option value="all">All Strings</option>
+                    <option value="1-2-3">High Strings (1-2-3 / E-B-G)</option>
+                    <option value="2-3-4">Mid-High (2-3-4 / B-G-D)</option>
+                    <option value="3-4-5">Mid-Low (3-4-5 / G-D-A)</option>
+                    <option value="4-5-6">Low Strings (4-5-6 / D-A-E)</option>
+                </select>
+            </div>
+
+            <div class="control-card">
+                <label for="select-inversion">Inversion Position</label>
+                <select id="select-inversion">
+                    <option value="all">All Inversions</option>
+                    <option value="root">Root Position</option>
+                    <option value="1st">1st Inversion</option>
+                    <option value="2nd">2nd Inversion</option>
+                </select>
+            </div>
+
+            <div class="control-card">
+                <label>Display Labels</label>
+                <div class="btn-toggle-group">
+                    <button id="btn-mode-notes" class="active">Notes</button>
+                    <button id="btn-mode-degrees">Degrees</button>
+                </div>
+            </div>
+
+            <div class="control-card summary-card">
+                <div class="summary-title" id="summary-title">C Major</div>
+                <div class="summary-notes" id="summary-notes">C - E - G</div>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-dot" style="background:var(--color-root)"></div> Root</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:var(--color-third)"></div> 3rd/2nd/4th</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:var(--color-fifth)"></div> 5th</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fretboard Section -->
+        <section class="fretboard-wrapper">
+            <div class="fretboard-container">
+                <div class="fret-numbers" id="fret-numbers"></div>
+                <div class="neck">
+                    <div class="inlay-layer" id="inlay-layer"></div>
+                    <div class="strings-container" id="strings-container"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Voice Shape Cards Section -->
+        <section class="shapes-section">
+            <div class="shapes-header">
+                <span>Closed-Position Triad Voicings</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);" id="shape-count-badge">0 Shapes</span>
+            </div>
+            <div class="cards-grid" id="cards-grid"></div>
+        </section>
+    </main>
+
+    <!-- PAGE 2: COMPREHENSIVE TUTORIAL VIEW -->
+    <main id="page-tutorial" class="view-page">
+        <div class="tutorial-container">
+            <!-- Sidebar Navigation -->
+            <aside class="tutorial-sidebar">
+                <div class="sidebar-title">Masterclass Index</div>
+                <ul class="toc-list">
+                    <li><a href="#sec-1" class="toc-link">1. What is a Triad?</a></li>
+                    <li><a href="#sec-2" class="toc-link">2. Essential Guitar Power</a></li>
+                    <li><a href="#sec-3" class="toc-link">3. Anatomy of Inversions</a></li>
+                    <li><a href="#sec-4" class="toc-link">4. The 4 String Sets</a></li>
+                    <li><a href="#sec-5" class="toc-link">5. Voice Leading (I-IV-V)</a></li>
+                    <li><a href="#sec-6" class="toc-link">6. Song Styles & Riffs</a></li>
+                    <li><a href="#sec-7" class="toc-link">7. Practice Drills & Routines</a></li>
+                </ul>
+            </aside>
+
+            <!-- Main Tutorial Content -->
+            <div class="tutorial-content">
+
+                <!-- Section 1 -->
+                <section id="sec-1" class="tutorial-section">
+                    <div class="section-header">
+                        <div class="section-num">1</div>
+                        <h2 class="section-title">What is a Triad?</h2>
+                    </div>
+                    <p class="tutorial-text">
+                        A <strong>triad</strong> is the most fundamental building block of harmony in Western music. By definition, a triad is a chord consisting of exactly <strong>three distinct pitch classes</strong> stacked in thirds above a starting note called the <strong>Root</strong>.
+                    </p>
+                    <p class="tutorial-text">
+                        Unlike full 6-string barre chords which duplicate pitches across multiple octaves, closed-position triads contain zero redundant notes. They deliver maximum harmonic clarity without cluttering the frequency spectrum.
+                    </p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">Core Triad Formulas & Interval Stacking</div>
+                        <div class="formula-table-container">
+                            <table class="formula-table">
+                                <thead>
+                                    <tr>
+                                        <th>Triad Type</th>
+                                        <th>Formula</th>
+                                        <th>Interval Structure</th>
+                                        <th>Example (Root C)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Major</strong></td>
+                                        <td>1 - 3 - 5</td>
+                                        <td>Major 3rd + Minor 3rd</td>
+                                        <td>C - E - G</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Minor</strong></td>
+                                        <td>1 - b3 - 5</td>
+                                        <td>Minor 3rd + Major 3rd</td>
+                                        <td>C - Eb - G</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Diminished</strong></td>
+                                        <td>1 - b3 - b5</td>
+                                        <td>Minor 3rd + Minor 3rd</td>
+                                        <td>C - Eb - Gb</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Augmented</strong></td>
+                                        <td>1 - 3 - #5</td>
+                                        <td>Major 3rd + Major 3rd</td>
+                                        <td>C - E - G#</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Sus2</strong></td>
+                                        <td>1 - 2 - 5</td>
+                                        <td>Major 2nd + Perfect 4th</td>
+                                        <td>C - D - G</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Sus4</strong></td>
+                                        <td>1 - 4 - 5</td>
+                                        <td>Perfect 4th + Major 2nd</td>
+                                        <td>C - F - G</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2 -->
+                <section id="sec-2" class="tutorial-section">
+                    <div class="section-header">
+                        <div class="section-num">2</div>
+                        <h2 class="section-title">Why Triads are Essential on Guitar</h2>
+                    </div>
+                    <p class="tutorial-text">
+                        Many guitarists start by learning standard open chords and 5-6 string barre chords. While effective for simple acoustic strumming, relying solely on heavy barre chords creates three major problems:
+                    </p>
+                    <ul style="color: #cbd5e1; margin-left: 20px; line-height: 1.8; font-size: 0.95rem;">
+                        <li><strong>Sonic Mud:</strong> Bass strings played loudly on full barre chords clash with the bass guitar and keyboard player.</li>
+                        <li><strong>Physical Tension:</strong> Constantly clamping down 6-string barre chords causes hand fatigue during long gig sets.</li>
+                        <li><strong>Boxed-In Playing:</strong> Guitarists get trapped playing up and down standard CAGED shapes without understanding note function.</li>
+                    </ul>
+                    <p class="tutorial-text">
+                        Mastering 3-string closed triads unlocks complete neck freedom. You learn to instantly map any chord anywhere on the fretboard, integrate chord-melody fills seamlessly, and craft tight rhythm tracks that sit perfectly in a live or studio mix.
+                    </p>
+                </section>
+
+                <!-- Section 3 -->
+                <section id="sec-3" class="tutorial-section">
+                    <div class="section-header">
+                        <div class="section-num">3</div>
+                        <h2 class="section-title">Anatomy of Triad Inversions</h2>
+                    </div>
+                    <p class="tutorial-text">
+                        A triad's <strong>inversion</strong> is determined entirely by which note is placed in the lowest position (the bass note):
+                    </p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">The Three Structural States</div>
+                        <div style="display: flex; flex-direction: column; gap: 12px; color: #cbd5e1; font-size: 0.9rem;">
+                            <div><strong style="color:var(--color-root);">Root Position (1 - 3 - 5):</strong> The Root is the lowest note. Produces a strong, grounded sound.</div>
+                            <div><strong style="color:var(--color-third);">1st Inversion (3 - 5 - 1):</strong> The 3rd is the lowest note. Creates a smooth melodic quality in bass lines.</div>
+                            <div><strong style="color:var(--color-fifth);">2nd Inversion (5 - 1 - 3):</strong> The 5th is the lowest note. Imparts a bright, driving suspended feel.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4 -->
+                <section id="sec-4" class="tutorial-section">
+                    <div class="section-header">
+                        <div class="section-num">4</div>
+                        <h2 class="section-title">The 4 String Sets</h2>
+                    </div>
+                    <p class="tutorial-text">
+                        The guitar fretboard is organized into four sets of three adjacent strings. Because of the tuning jump between the G string (3) and B string (2), shape geometries shift across sets:
+                    </p>
+
+                    <div class="diagram-box">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                            <div style="background:#0b1329; padding:12px; border-radius:6px; border:1px solid var(--border-color);">
+                                <strong style="color:var(--color-accent);">Top 3 Strings (1-2-3 / E-B-G)</strong>
+                                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Brightest timbre. Ideal for funk stabs, lead fills, and soaring solos.</p>
+                            </div>
+                            <div style="background:#0b1329; padding:12px; border-radius:6px; border:1px solid var(--border-color);">
+                                <strong style="color:var(--color-accent);">Mid-High Set (2-3-4 / B-G-D)</strong>
+                                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Warm and vocal. The classic Jimi Hendrix & John Mayer embellishment zone.</p>
+                            </div>
+                            <div style="background:#0b1329; padding:12px; border-radius:6px; border:1px solid var(--border-color);">
+                                <strong style="color:var(--color-accent);">Mid-Low Set (3-4-5 / G-D-A)</strong>
+                                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Punchy midrange. Ideal for rock rhythm driving and punchy chord work.</p>
+                            </div>
+                            <div style="background:#0b1329; padding:12px; border-radius:6px; border:1px solid var(--border-color);">
+                                <strong style="color:var(--color-accent);">Bass Set (4-5-6 / D-A-E)</strong>
+                                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Deep and authoritative. Excellent for power trio rhythm accompaniment.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5 -->
+                <section id="sec-5" class="tutorial-section">
+                    <div class="section-header">
+                        <div class="section-num">5</div>
+                        <h2 class="section-title">Voice Leading & Smooth Transitions</h2>
+                    </div>
+                    <p class="tutorial-text">
+                        <strong>Voice Leading</strong> is the art of moving smoothly between chord progressions by finding the shortest physical path between notes. Instead of jumping up and down the neck with root-position chords, you choose inversions where notes move by step (1 or 2 frets) or remain as common tones.
+                    </p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">Example: C - F - G Progression on Strings 1-2-3 (Top Set)</div>
+                        <div class="tab-box">
+C Major (1st Inv)   -->  F Major (2nd Inv)   -->  G Major (Root Pos)
+E (3rd)  : 12th fret --> F (Root) : 13th fret --> G (5th)  : 15th fret
+C (Root) : 13th fret --> C (5th)  : 13th fret --> D (5th)  : 15th fret
+G (5th)  : 12th fret --> A (3rd)  : 14th fret --> B (3rd)  : 16th fret
+                        </div>
+                    </div>
+
+                    <div class="interactive-demo-bar">
+                        <div class="demo-info">
+                            <div class="demo-title">Hear Smooth Voice Leading (I - IV - V in C Major)</div>
+                            <div class="demo-sub">Plays C (1st Inversion) → F (2nd Inversion) → G (Root Position)</div>
+                        </div>
+                        <button onclick="playVoiceLeadingDemo()">▶ Play Voice Leading</button>
+                    </div>
+                </section>
+
+                <!-- Section 6 -->
+                <section id="sec-6" class="tutorial-section">
+                    <div class="section-header">
+                        <div class="section-num">6</div>
+                        <h2 class="section-title">Practical Examples & Song Applications</h2>
+                    </div>
+                    
+                    <div style="display:flex; flex-direction:column; gap:16px;">
+                        <div>
+                            <h4 style="color:var(--color-accent); font-size:1.05rem; margin-bottom:6px;">A. Hendrix & Mayer Double-Stop Embellishments</h4>
+                            <p class="tutorial-text">
+                                Hold a 2-3-4 string set triad and hammer-on 2nd/4th degree embellishments with your free pinky finger. This creates the signature ambient rhythm sound of "Little Wing" and "Bold As Love".
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 style="color:var(--color-accent); font-size:1.05rem; margin-bottom:6px;">B. Frusciante / RHCP Melodic Rhythm Lines</h4>
+                            <p class="tutorial-text">
+                                Arpeggiating top 3-string triads while changing inversions rapidly creates driving melodic hooks like those in "Under the Bridge" and "Californication".
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 style="color:var(--color-accent); font-size:1.05rem; margin-bottom:6px;">C. Funk & Soul Stabs</h4>
+                            <p class="tutorial-text">
+                                Mute outer strings and perform rapid sixteenth-note rhythm stabs on string set 1-2-3 for crisp funk groove locked in with the hi-hat.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 7 -->
+                <section id="sec-7" class="tutorial-section">
+                    <div class="section-header">
+                        <div class="section-num">7</div>
+                        <h2 class="section-title">Practice Drills & Routines</h2>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:14px;">
+                        <div style="background:#0f172a; padding:14px; border-radius:8px; border:1px solid var(--border-color);">
+                            <strong style="color:var(--text-main);">Drill 1: Horizontal Inversion Runway</strong>
+                            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">
+                                Pick a single string set (e.g., 1-2-3). Start at Root Position C Major, then move up to 1st Inversion C, then 2nd Inversion C, and continue all the way to Fret 24. Repeat backwards.
+                            </p>
+                        </div>
+
+                        <div style="background:#0f172a; padding:14px; border-radius:8px; border:1px solid var(--border-color);">
+                            <strong style="color:var(--text-main);">Drill 2: Cycle of 4ths Navigation</strong>
+                            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">
+                                Cycle through keys (C → F → Bb → Eb → Ab → Db → F# → B → E → A → D → G) without moving your hand more than 3 frets in either direction by choosing neighboring inversions.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        /**
+         * MUSIC THEORY DATA & ENGINE
+         */
+        const KEYS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+        const PITCH_CLASSES = {
+            'C': 0, 'C#': 1, 'Db': 1,
+            'D': 2, 'D#': 3, 'Eb': 3,
+            'E': 4, 'F': 5, 'F#': 6, 'Gb': 6,
+            'G': 7, 'G#': 8, 'Ab': 8,
+            'A': 9, 'A#': 10, 'Bb': 10,
+            'B': 11
+        };
+
+        const CANONICAL_PITCH_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+        const TUNING = [
+            { name: 'E', midi: 64 }, // String 1 (High E)
+            { name: 'B', midi: 59 }, // String 2
+            { name: 'G', midi: 55 }, // String 3
+            { name: 'D', midi: 50 }, // String 4
+            { name: 'A', midi: 45 }, // String 5
+            { name: 'E', midi: 40 }  // String 6 (Low E)
+        ];
+
+        const TOTAL_FRETS = 24;
+
+        const TRIAD_FORMULAS = {
+            'Major':      { intervals: [0, 4, 7], degrees: ['R', '3', '5'] },
+            'Minor':      { intervals: [0, 3, 7], degrees: ['R', 'b3', '5'] },
+            'Diminished': { intervals: [0, 3, 6], degrees: ['R', 'b3', 'b5'] },
+            'Augmented':  { intervals: [0, 4, 8], degrees: ['R', '3', '#5'] },
+            'Sus2':       { intervals: [0, 2, 7], degrees: ['R', '2', '5'] },
+            'Sus4':       { intervals: [0, 5, 7], degrees: ['R', '4', '5'] }
+        };
+
+        // App State
+        const state = {
+            key: 'C',
+            quality: 'Major',
+            stringSet: 'all',
+            inversion: 'all',
+            displayMode: 'notes',
+            selectedShapeId: null,
+            volume: 0.7
+        };
+
+        /**
+         * WEB AUDIO SYNTHESIZER
+         */
+        class WebAudioEngine {
+            constructor() {
+                this.ctx = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContextClass();
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            playMidiNote(midiNote, duration = 1.2, timeOffset = 0) {
+                this.init();
+                const now = this.ctx.currentTime + timeOffset;
+                const freq = 440 * Math.pow(2, (midiNote - 69) / 12);
+
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now);
+
+                const vol = state.volume;
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.linearRampToValueAtTime(0.3 * vol, now + 0.03);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + duration);
+            }
+
+            strum(notes, duration = 1.4, stagger = 0.04, timeStart = 0) {
+                notes.forEach((n, idx) => {
+                    const midi = typeof n === 'number' ? n : n.midi;
+                    this.playMidiNote(midi, duration, timeStart + idx * stagger);
+                });
+            }
+
+            arpeggiate(notes) {
+                notes.forEach((n, idx) => {
+                    const midi = typeof n === 'number' ? n : n.midi;
+                    this.playMidiNote(midi, 1.2, idx * 0.2);
+                });
+            }
+        }
+
+        const audio = new WebAudioEngine();
+
+        /**
+         * TAB SWITCHING LOGIC
+         */
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.view-page').forEach(page => page.classList.remove('active-view'));
+
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            document.getElementById(`page-${tabId}`).classList.add('active-view');
+        }
+
+        /**
+         * CALCULATIONS
+         */
+        function getTriadMembers(key, quality) {
+            const rootPitch = PITCH_CLASSES[key];
+            const formula = TRIAD_FORMULAS[quality];
+
+            return formula.intervals.map((interval, idx) => {
+                const pitch = (rootPitch + interval) % 12;
+                return {
+                    pitch: pitch,
+                    note: CANONICAL_PITCH_NAMES[pitch],
+                    degree: formula.degrees[idx],
+                    role: idx === 0 ? 'root' : (idx === 1 ? 'third' : 'fifth')
+                };
+            });
+        }
+
+        function getFretNote(stringIdx, fret) {
+            const openMidi = TUNING[stringIdx].midi;
+            const noteMidi = openMidi + fret;
+            const pitch = noteMidi % 12;
+            return {
+                stringIdx: stringIdx,
+                stringNum: stringIdx + 1,
+                fret: fret,
+                midi: noteMidi,
+                pitch: pitch,
+                note: CANONICAL_PITCH_NAMES[pitch]
+            };
+        }
+
+        function calculateTriadShapes() {
+            const members = getTriadMembers(state.key, state.quality);
+            const stringSets = [
+                { id: '1-2-3', strings: [0, 1, 2] },
+                { id: '2-3-4', strings: [1, 2, 3] },
+                { id: '3-4-5', strings: [2, 3, 4] },
+                { id: '4-5-6', strings: [3, 4, 5] }
+            ];
+
+            const shapes = [];
+
+            stringSets.forEach(set => {
+                const [sHigh, sMid, sLow] = set.strings;
+
+                for (let minFret = 0; minFret <= TOTAL_FRETS - 2; minFret++) {
+                    const maxFret = Math.min(minFret + 4, TOTAL_FRETS);
+
+                    const highCandidates = [];
+                    const midCandidates = [];
+                    const lowCandidates = [];
+
+                    for (let f = minFret; f <= maxFret; f++) {
+                        const nH = getFretNote(sHigh, f);
+                        const nM = getFretNote(sMid, f);
+                        const nL = getFretNote(sLow, f);
+
+                        const mH = members.find(m => m.pitch === nH.pitch);
+                        if (mH) highCandidates.push({ ...nH, ...mH });
+
+                        const mM = members.find(m => m.pitch === nM.pitch);
+                        if (mM) midCandidates.push({ ...nM, ...mM });
+
+                        const mL = members.find(m => m.pitch === nL.pitch);
+                        if (mL) lowCandidates.push({ ...nL, ...mL });
+                    }
+
+                    highCandidates.forEach(nH => {
+                        midCandidates.forEach(nM => {
+                            lowCandidates.forEach(nL => {
+                                const roles = new Set([nH.role, nM.role, nL.role]);
+                                const frets = [nH.fret, nM.fret, nL.fret];
+                                const span = Math.max(...frets) - Math.min(...frets);
+
+                                if (roles.size === 3 && span <= 4) {
+                                    let inversion = 'root';
+                                    if (nL.role === 'third') inversion = '1st';
+                                    if (nL.role === 'fifth') inversion = '2nd';
+
+                                    const shapeId = `${set.id}-${inversion}-f${nL.fret}-f${nM.fret}-f${nH.fret}`;
+
+                                    if (!shapes.some(s => s.id === shapeId)) {
+                                        shapes.push({
+                                            id: shapeId,
+                                            stringSet: set.id,
+                                            inversion: inversion,
+                                            notes: [nL, nM, nH]
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    });
+                }
+            });
+
+            return shapes;
+        }
+
+        /**
+         * RENDER FUNCTIONS
+         */
+        function renderFretNumbers() {
+            const container = document.getElementById('fret-numbers');
+            let html = '<div class="fret-number-cell nut">Nut</div>';
+            for (let f = 1; f <= TOTAL_FRETS; f++) {
+                html += `<div class="fret-number-cell">${f}</div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function renderInlays() {
+            const container = document.getElementById('inlay-layer');
+            const singleInlays = [3, 5, 7, 9, 15, 17, 19, 21];
+            const doubleInlays = [12, 24];
+
+            let html = '';
+            for (let f = 1; f <= TOTAL_FRETS; f++) {
+                html += '<div class="inlay-cell">';
+                if (singleInlays.includes(f)) {
+                    html += '<div class="inlay-dot"></div>';
+                } else if (doubleInlays.includes(f)) {
+                    html += '<div class="inlay-double"><div class="inlay-dot"></div><div class="inlay-dot"></div></div>';
+                }
+                html += '</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        function renderFretboard(allShapes) {
+            const container = document.getElementById('strings-container');
+            const members = getTriadMembers(state.key, state.quality);
+
+            const filteredShapes = allShapes.filter(s => {
+                const matchSet = (state.stringSet === 'all' || state.stringSet === s.stringSet);
+                const matchInv = (state.inversion === 'all' || state.inversion === s.inversion);
+                const matchSel = state.selectedShapeId ? (state.selectedShapeId === s.id) : true;
+                return matchSet && matchInv && matchSel;
+            });
+
+            const activeMap = new Map();
+            filteredShapes.forEach(shape => {
+                shape.notes.forEach(n => {
+                    const key = `${n.stringIdx}-${n.fret}`;
+                    activeMap.set(key, n);
+                });
+            });
+
+            let html = '';
+
+            for (let sIdx = 0; sIdx < 6; sIdx++) {
+                const tuningObj = TUNING[sIdx];
+                const wireThickness = (sIdx + 1) * 0.5 + 1.2;
+
+                html += `<div class="string-row">`;
+                html += `<div class="string-wire" style="height: ${wireThickness}px;"></div>`;
+                html += `<div class="tuning-label">${tuningObj.name}</div>`;
+
+                // Nut
+                const nutNote = getFretNote(sIdx, 0);
+                const nutActive = activeMap.get(`${sIdx}-0`);
+                const nutMember = members.find(m => m.pitch === nutNote.pitch);
+
+                html += `<div class="fret-cell nut-cell">`;
+                if (nutActive) {
+                    const label = state.displayMode === 'notes' ? nutActive.note : nutActive.degree;
+                    html += `<div class="note-badge role-${nutActive.role}" onclick="audio.playMidiNote(${nutActive.midi})">${label}</div>`;
+                } else if (nutMember) {
+                    const label = state.displayMode === 'notes' ? nutMember.note : nutMember.degree;
+                    html += `<div class="note-badge role-${nutMember.role} ghost-note" onclick="audio.playMidiNote(${nutNote.midi})">${label}</div>`;
+                }
+                html += `</div>`;
+
+                // Frets 1 - 24
+                for (let f = 1; f <= TOTAL_FRETS; f++) {
+                    const fretNote = getFretNote(sIdx, f);
+                    const activeNode = activeMap.get(`${sIdx}-${f}`);
+                    const memberMatch = members.find(m => m.pitch === fretNote.pitch);
+
+                    html += `<div class="fret-cell">`;
+                    if (activeNode) {
+                        const label = state.displayMode === 'notes' ? activeNode.note : activeNode.degree;
+                        html += `<div class="note-badge role-${activeNode.role}" onclick="audio.playMidiNote(${activeNode.midi})">${label}</div>`;
+                    } else if (memberMatch) {
+                        const label = state.displayMode === 'notes' ? memberMatch.note : memberMatch.degree;
+                        html += `<div class="note-badge role-${memberMatch.role} ghost-note" onclick="audio.playMidiNote(${fretNote.midi})">${label}</div>`;
+                    }
+                    html += `</div>`;
+                }
+
+                html += `</div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function renderVoiceCards(shapes) {
+            const grid = document.getElementById('cards-grid');
+            const countBadge = document.getElementById('shape-count-badge');
+
+            const filteredShapes = shapes.filter(s => {
+                const matchSet = (state.stringSet === 'all' || state.stringSet === s.stringSet);
+                const matchInv = (state.inversion === 'all' || state.inversion === s.inversion);
+                return matchSet && matchInv;
+            });
+
+            countBadge.textContent = `${filteredShapes.length} Shapes Found`;
+
+            if (filteredShapes.length === 0) {
+                grid.innerHTML = `<div class="empty-state">No triad voicings match the selected filters.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filteredShapes.map(shape => {
+                const isSelected = state.selectedShapeId === shape.id;
+                const notesStr = shape.notes.map(n => n.note).join(' - ');
+                const frets = shape.notes.map(n => n.fret);
+                const minF = Math.min(...frets);
+                const maxF = Math.max(...frets);
+                const fretRangeStr = minF === maxF ? `Fret ${minF}` : `Frets ${minF} - ${maxF}`;
+
+                return `
+                    <div class="voice-card ${isSelected ? 'selected' : ''}" onclick="selectShapeCard('${shape.id}')">
+                        <div class="card-top">
+                            <span class="card-inversion">${shape.inversion.toUpperCase()} POS</span>
+                            <span class="card-stringset">Strings ${shape.stringSet}</span>
+                        </div>
+                        <div class="card-notes">${notesStr}</div>
+                        <div class="card-footer">
+                            <span>${fretRangeStr}</span>
+                            <button class="card-play-btn" onclick="event.stopPropagation(); playShapeAudio('${shape.id}')">▶ Strum</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateSummary() {
+            const members = getTriadMembers(state.key, state.quality);
+            const notesStr = members.map(m => m.note).join(' - ');
+
+            document.getElementById('summary-title').textContent = `${state.key} ${state.quality}`;
+            document.getElementById('summary-notes').textContent = notesStr;
+        }
+
+        function selectShapeCard(shapeId) {
+            if (state.selectedShapeId === shapeId) {
+                state.selectedShapeId = null;
+            } else {
+                state.selectedShapeId = shapeId;
+                playShapeAudio(shapeId);
+            }
+            updateApp();
+        }
+
+        function playShapeAudio(shapeId) {
+            const shapes = calculateTriadShapes();
+            const shape = shapes.find(s => s.id === shapeId);
+            if (shape) {
+                audio.strum(shape.notes);
+            }
+        }
+
+        function playVoiceLeadingDemo() {
+            // C Major (1st Inversion) -> F Major (2nd Inversion) -> G Major (Root Position)
+            const chordC = [55 + 12, 59 + 13 - 12 + 12, 64 + 12 - 12 + 12]; // G4, C5, E5 -> [67, 72, 76]
+            const chordF = [55 + 14, 59 + 13 - 12 + 12, 64 + 13 - 12 + 12]; // A4, C5, F5 -> [69, 72, 77]
+            const chordG = [55 + 16, 59 + 15 - 12 + 12, 64 + 15 - 12 + 12]; // B4, D5, G5 -> [71, 74, 79]
+
+            audio.strum(chordC, 1.2, 0.04, 0.0);
+            audio.strum(chordF, 1.2, 0.04, 1.2);
+            audio.strum(chordG, 1.6, 0.04, 2.4);
+        }
+
+        function updateApp() {
+            const shapes = calculateTriadShapes();
+            updateSummary();
+            renderFretboard(shapes);
+            renderVoiceCards(shapes);
+        }
+
+        /**
+         * INITIALIZATION & EVENT LISTENERS
+         */
+        window.addEventListener('DOMContentLoaded', () => {
+            const keySelect = document.getElementById('select-key');
+            keySelect.innerHTML = KEYS.map(k => `<option value="${k}">${k}</option>`).join('');
+            keySelect.value = state.key;
+
+            renderFretNumbers();
+            renderInlays();
+            updateApp();
+
+            // Controls listeners
+            keySelect.addEventListener('change', (e) => {
+                state.key = e.target.value;
+                state.selectedShapeId = null;
+                updateApp();
+            });
+
+            document.getElementById('select-quality').addEventListener('change', (e) => {
+                state.quality = e.target.value;
+                state.selectedShapeId = null;
+                updateApp();
+            });
+
+            document.getElementById('select-stringset').addEventListener('change', (e) => {
+                state.stringSet = e.target.value;
+                state.selectedShapeId = null;
+                updateApp();
+            });
+
+            document.getElementById('select-inversion').addEventListener('change', (e) => {
+                state.inversion = e.target.value;
+                state.selectedShapeId = null;
+                updateApp();
+            });
+
+            const btnNotes = document.getElementById('btn-mode-notes');
+            const btnDegrees = document.getElementById('btn-mode-degrees');
+
+            btnNotes.addEventListener('click', () => {
+                state.displayMode = 'notes';
+                btnNotes.classList.add('active');
+                btnDegrees.classList.remove('active');
+                updateApp();
+            });
+
+            btnDegrees.addEventListener('click', () => {
+                state.displayMode = 'degrees';
+                btnDegrees.classList.add('active');
+                btnNotes.classList.remove('active');
+                updateApp();
+            });
+
+            document.getElementById('btn-strum').addEventListener('click', () => {
+                const shapes = calculateTriadShapes();
+                const filtered = shapes.filter(s => {
+                    const matchSet = (state.stringSet === 'all' || state.stringSet === s.stringSet);
+                    const matchInv = (state.inversion === 'all' || state.inversion === s.inversion);
+                    return matchSet && matchInv;
+                });
+
+                if (state.selectedShapeId) {
+                    playShapeAudio(state.selectedShapeId);
+                } else if (filtered.length > 0) {
+                    audio.strum(filtered[0].notes);
+                }
+            });
+
+            document.getElementById('btn-arpeggio').addEventListener('click', () => {
+                const shapes = calculateTriadShapes();
+                const filtered = shapes.filter(s => {
+                    const matchSet = (state.stringSet === 'all' || state.stringSet === s.stringSet);
+                    const matchInv = (state.inversion === 'all' || state.inversion === s.inversion);
+                    return matchSet && matchInv;
+                });
+
+                if (state.selectedShapeId) {
+                    const shape = shapes.find(s => s.id === state.selectedShapeId);
+                    if (shape) audio.arpeggiate(shape.notes);
+                } else if (filtered.length > 0) {
+                    audio.arpeggiate(filtered[0].notes);
+                }
+            });
+
+            document.getElementById('volume-slider').addEventListener('input', (e) => {
+                state.volume = parseFloat(e.target.value);
+            });
+        });
+    </script>
+</body>
+</html>
