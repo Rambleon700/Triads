@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guitar Triads Explorer & Visualizer</title>
+    <style>
+        /* Modern Dark Theme CSS Palette & Reset */
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --border-color: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --color-root: #06b6d4;      /* Cyan */
+            --color-third: #f59e0b;     /* Amber */
+            --color-fifth: #ec4899;     /* Pink */
+            --color-accent: #38bdf8;    /* Light Blue */
+            --wood-dark: #1c1917;
+            --fret-wire: #64748b;
+            --string-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-title p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons & Inputs */
+        button {
+            background-color: #0284c7;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        button:hover {
+            background-color: #0369a1;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.btn-secondary {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        button.btn-secondary:hover {
+            background-color: var(--bg-card-hover);
+        }
+
+        select {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        select:focus {
+            border-color: var(--color-accent);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--bg-card);
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .volume-control input[type="range"] {
+            width: 70px;
+            accent-color: var(--color-accent);
+            cursor: pointer;
+        }
+
+        /* Controls Dashboard Grid */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .control-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-card label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .btn-toggle-group {
+            display: flex;
+            background-color: var(--bg-dark);
+            padding: 3px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-toggle-group button {
+            flex: 1;
+            padding: 6px;
+            font-size: 0.75rem;
+            background: transparent;
+            color: var(--text-muted);
+            border-radius: 4px;
+            justify-content: center;
+        }
+
+        .btn-toggle-group button.active {
+            background-color: #0284c7;
+            color: #ffffff;
+        }
+
+        /* Summary Info Header */
+        .summary-card {
+            background: linear-gradient(135deg, rgba(30,41,59,1) 0%, rgba(15,23,42,1) 100%);
+            border-left: 4px solid var(--color-root);
+        }
+
+        .summary-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .summary-notes {
+            font-family: monospace;
+            font-size: 0.95rem;
+            color: var(--color-accent);
+        }
+
+        .legend {
+            display: flex;
+            gap: 12px;
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* 24-Fret Guitar Fretboard */
+        .fretboard-wrapper {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px 15px 15px 15px;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .fretboard-container {
+            min-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        .fret-numbers {
+            display: flex;
+            padding-left: 40px; /* Space for tuning labels */
+            margin-bottom: 6px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .fret-number-cell {
+            flex: 1;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .fret-number-cell.nut {
+            width: 40px;
+            flex: none;
+        }
+
+        .neck {
+            position: relative;
+            background-color: var(--wood-dark);
+            border-top: 3px solid var(--fret-wire);
+            border-bottom: 3px solid var(--fret-wire);
+            border-radius: 4px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        .strings-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+
+        .string-row {
+            display: flex;
+            align-items: center;
+            height: 38px;
+            position: relative;
+        }
+
+        /* Guitar String Horizontal Line */
+        .string-wire {
+            position: absolute;
+            left: 40px;
+            right: 0;
+            background: linear-gradient(0deg, #94a3b8, #cbd5e1);
+            z-index: 1;
+            pointer-events: none;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .tuning-label {
+            width: 40px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #f1f5f9;
+            background-color: #090d16;
+            border-right: 4px solid #d97706; /* Nut styling */
+            z-index: 3;
+        }
+
+        .fret-cell {
+            flex: 1;
+            height: 100%;
+            border-right: 2px solid var(--fret-wire);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .fret-cell.nut-cell {
+            width: 40px;
+            flex: none;
+            background-color: rgba(255,255,255,0.03);
+            border-right: 4px solid #d97706;
+        }
+
+        /* Inlays / Fret Markers */
+        .inlay-layer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 40px;
+            right: 0;
+            pointer-events: none;
+            z-index: 1;
+            display: flex;
+        }
+
+        .inlay-cell {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inlay-dot {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+        }
+
+        .inlay-double {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* Note Badge Nodes */
+        .note-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: monospace;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+            transition: transform 0.15s ease, filter 0.15s ease;
+            z-index: 4;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .note-badge:hover {
+            transform: scale(1.2);
+            filter: brightness(1.2);
+        }
+
+        .note-badge.role-root {
+            background-color: var(--color-root);
+            color: #042f2e;
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.8);
+        }
+
+        .note-badge.role-third {
+            background-color: var(--color-third);
+            color: #451a03;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
+        }
+
+        .note-badge.role-fifth {
+            background-color: var(--color-fifth);
+            color: #500724;
+            box-shadow: 0 0 8px rgba(236, 72, 153, 0.8);
+        }
+
+        .note-badge.ghost-note {
+            opacity: 0.35;
+            transform: scale(0.85);
+            box-shadow: none;
+        }
+
+        .note-badge.ghost-note:hover {
+            opacity: 0.9;
+            transform: scale(1.1);
+        }
+
+        /* Voice Cards Grid */
+        .shapes-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .shapes-header {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .voice-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .voice-card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .voice-card.selected {
+            border-color: var(--color-root);
+            background-color: #162438;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-inversion {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .card-stringset {
+            font-size: 0.7rem;
+            background-color: var(--bg-dark);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--color-accent);
+            font-family: monospace;
+            border: 1px solid var(--border-color);
+        }
+
+        .card-notes {
+            font-family: monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--color-root);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 6px;
+        }
+
+        .card-play-btn {
+            background: transparent;
+            color: var(--color-accent);
+            border: 1px solid var(--color-accent);
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            border-radius: 4px;
+        }
+
+        .card-play-btn:hover {
+            background-color: var(--color-accent);
+            color: var(--bg-dark);
+        }
+
+        /* Empty state message */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            background-color: var(--bg-card);
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Controls -->
+    <header>
+        <div class="logo-title">
+            <h1>Guitar Triads Master</h1>
+            <p>Interactive 24-Fret Visualizer & Voicing Explorer</p>
+        </div>
+
+        <div class="header-controls">
+            <button id="btn-strum">
+                <span>▶</span> Strum Selected
+            </button>
+            <button id="btn-arpeggio" class="btn-secondary">
+                <span>📈</span> Arpeggiate
+            </button>
+            <div class="volume-control">
+                <span>Vol</span>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.7">
+            </div>
+        </div>
+    </header>
+
+    <!-- Controls Dashboard Grid -->
+    <section class="controls-grid">
+        <!-- Key Selection -->
+        <div class="control-card">
+            <label for="select-key">Key / Root</label>
+            <select id="select-key"></select>
+        </div>
+
+        <!-- Triad Quality -->
+        <div class="control-card">
+            <label for="select-quality">Triad Quality</label>
+            <select id="select-quality">
+                <option value="Major">Major (1 - 3 - 5)</option>
+                <option value="Minor">Minor (1 - b3 - 5)</option>
+                <option value="Diminished">Diminished (1 - b3 - b5)</option>
+                <option value="Augmented">Augmented (1 - 3 - #5)</option>
+                <option value="Sus2">Sus2 (1 - 2 - 5)</option>
+                <option value="Sus4">Sus4 (1 - 4 - 5)</option>
+            </select>
+        </div>
+
+        <!-- String Set Filter -->
+        <div class="control-card">
+            <label for="select-stringset">String Set Filter</label>
+            <select id="select-stringset">
+                <option value="all">All Strings</option>
+                <option value="1-2-3">High Strings (1-2-3 / E-B-G)</option>
+                <option value="2-3-4">Mid-High (2-3-4 / B-G-D)</option>
+                <option value="3-4-5">Mid-Low (3-4-5 / G-D-A)</option>
+                <option value="4-5-6">Low Strings (4-5-6 / D-A-E)</option>
+            </select>
+        </div>
+
+        <!-- Inversion Filter -->
+        <div class="control-card">
+            <label for="select-inversion">Inversion Position</label>
+            <select id="select-inversion">
+                <option value="all">All Inversions</option>
+                <option value="root">Root Position</option>
+                <option value="1st">1st Inversion</option>
+                <option value="2nd">2nd Inversion</option>
+            </select>
+        </div>
+
+        <!-- Display Labels Toggle -->
+        <div class="control-card">
+            <label>Display Labels</label>
+            <div class="btn-toggle-group">
+                <button id="btn-mode-notes" class="active">Notes</button>
+                <button id="btn-mode-degrees">Degrees</button>
+            </div>
+        </div>
+
+        <!-- Summary & Legend Card -->
+        <div class="control-card summary-card">
+            <div class="summary-title" id="summary-title">C Major</div>
+            <div class="summary-notes" id="summary-notes">C - E - G</div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-dot" style="background:var(--color-root)"></div> Root</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--color-third)"></div> 3rd/2nd/4th</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--color-fifth)"></div> 5th</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fretboard Visualization Section -->
+    <section class="fretboard-wrapper">
+        <div class="fretboard-container">
+            <!-- Fret Numbers Header -->
+            <div class="fret-numbers" id="fret-numbers"></div>
+
+            <!-- Neck Layer with Strings and Notes -->
+            <div class="neck">
+                <div class="inlay-layer" id="inlay-layer"></div>
+                <div class="strings-container" id="strings-container"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Shape Cards Section -->
+    <section class="shapes-section">
+        <div class="shapes-header">
+            <span>Closed-Position Triad Shapes</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);" id="shape-count-badge">0 Shapes Available</span>
+        </div>
+        <div class="cards-grid" id="cards-grid"></div>
+    </section>
+
+    <script>
+        /**
+         * MUSIC THEORY DATA & ENGINE
+         */
+        const KEYS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+        const PITCH_CLASSES = {
+            'C': 0, 'C#': 1, 'Db': 1,
+            'D': 2, 'D#': 3, 'Eb': 3,
+            'E': 4, 'F': 5, 'F#': 6, 'Gb': 6,
+            'G': 7, 'G#': 8, 'Ab': 8,
+            'A': 9, 'A#': 10, 'Bb': 10,
+            'B': 11
+        };
+
+        const CANONICAL_PITCH_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+        // Standard Guitar Tuning (String index 0 = High E, 5 = Low E)
+        const TUNING = [
+            { name: 'E', midi: 64 }, // String 1 (High E)
+            { name: 'B', midi: 59 }, // String 2
+            { name: 'G', midi: 55 }, // String 3
+            { name: 'D', midi: 50 }, // String 4
+            { name: 'A', midi: 45 }, // String 5
+            { name: 'E', midi: 40 }  // String 6 (Low E)
+        ];
+
+        const TOTAL_FRETS = 24;
+
+        const TRIAD_FORMULAS = {
+            'Major':      { intervals: [0, 4, 7], degrees: ['R', '3', '5'] },
+            'Minor':      { intervals: [0, 3, 7], degrees: ['R', 'b3', '5'] },
+            'Diminished': { intervals: [0, 3, 6], degrees: ['R', 'b3', 'b5'] },
+            'Augmented':  { intervals: [0, 4, 8], degrees: ['R', '3', '#5'] },
+            'Sus2':       { intervals: [0, 2, 7], degrees: ['R', '2', '5'] },
+            'Sus4':       { intervals: [0, 5, 7], degrees: ['R', '4', '5'] }
+        };
+
+        // App State
+        const state = {
+            key: 'C',
+            quality: 'Major',
+            stringSet: 'all',
+            inversion: 'all',
+            displayMode: 'notes', // 'notes' | 'degrees'
+            selectedShapeId: null,
+            volume: 0.7
+        };
+
+        /**
+         * WEB AUDIO SYNTHESIZER
+         */
+        class WebAudioEngine {
+            constructor() {
+                this.ctx = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContextClass();
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            playMidiNote(midiNote, duration = 1.2, timeOffset = 0) {
+                this.init();
+                const now = this.ctx.currentTime + timeOffset;
+                const freq = 440 * Math.pow(2, (midiNote - 69) / 12);
+
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now);
+
+                const vol = state.volume;
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.linearRampToValueAtTime(0.3 * vol, now + 0.03);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + duration);
+            }
+
+            strum(notes) {
+                notes.forEach((n, idx) => {
+                    this.playMidiNote(n.midi, 1.4, idx * 0.04);
+                });
+            }
+
+            arpeggiate(notes) {
+                notes.forEach((n, idx) => {
+                    this.playMidiNote(n.midi, 1.2, idx * 0.2);
+                });
+            }
+        }
+
+        const audio = new WebAudioEngine();
+
+        /**
+         * CALCULATIONS
+         */
+        function getTriadMembers(key, quality) {
+            const rootPitch = PITCH_CLASSES[key];
+            const formula = TRIAD_FORMULAS[quality];
+
+            return formula.intervals.map((interval, idx) => {
+                const pitch = (rootPitch + interval) % 12;
+                return {
+                    pitch: pitch,
+                    note: CANONICAL_PITCH_NAMES[pitch],
+                    degree: formula.degrees[idx],
+                    role: idx === 0 ? 'root' : (idx === 1 ? 'third' : 'fifth')
+                };
+            });
+        }
+
+        function getFretNote(stringIdx, fret) {
+            const openMidi = TUNING[stringIdx].midi;
+            const noteMidi = openMidi + fret;
+            const pitch = noteMidi % 12;
+            return {
+                stringIdx: stringIdx,
+                stringNum: stringIdx + 1,
+                fret: fret,
+                midi: noteMidi,
+                pitch: pitch,
+                note: CANONICAL_PITCH_NAMES[pitch]
+            };
+        }
+
+        // Calculate closed triad shapes across adjacent 3-string sets
+        function calculateTriadShapes() {
+            const members = getTriadMembers(state.key, state.quality);
+            const stringSets = [
+                { id: '1-2-3', strings: [0, 1, 2] }, // High Strings E, B, G
+                { id: '2-3-4', strings: [1, 2, 3] }, // Mid-High B, G, D
+                { id: '3-4-5', strings: [2, 3, 4] }, // Mid-Low G, D, A
+                { id: '4-5-6', strings: [3, 4, 5] }  // Low Strings D, A, E
+            ];
+
+            const shapes = [];
+
+            stringSets.forEach(set => {
+                const [sHigh, sMid, sLow] = set.strings;
+
+                for (let minFret = 0; minFret <= TOTAL_FRETS - 2; minFret++) {
+                    const maxFret = Math.min(minFret + 4, TOTAL_FRETS);
+
+                    const highCandidates = [];
+                    const midCandidates = [];
+                    const lowCandidates = [];
+
+                    for (let f = minFret; f <= maxFret; f++) {
+                        const nH = getFretNote(sHigh, f);
+                        const nM = getFretNote(sMid, f);
+                        const nL = getFretNote(sLow, f);
+
+                        const mH = members.find(m => m.pitch === nH.pitch);
+                        if (mH) highCandidates.push({ ...nH, ...mH });
+
+                        const mM = members.find(m => m.pitch === nM.pitch);
+                        if (mM) midCandidates.push({ ...nM, ...mM });
+
+                        const mL = members.find(m => m.pitch === nL.pitch);
+                        if (mL) lowCandidates.push({ ...nL, ...mL });
+                    }
+
+                    highCandidates.forEach(nH => {
+                        midCandidates.forEach(nM => {
+                            lowCandidates.forEach(nL => {
+                                const roles = new Set([nH.role, nM.role, nL.role]);
+                                const frets = [nH.fret, nM.fret, nL.fret];
+                                const span = Math.max(...frets) - Math.min(...frets);
+
+                                if (roles.size === 3 && span <= 4) {
+                                    // Bass note determines inversion
+                                    let inversion = 'root';
+                                    if (nL.role === 'third') inversion = '1st';
+                                    if (nL.role === 'fifth') inversion = '2nd';
+
+                                    const shapeId = `${set.id}-${inversion}-f${nL.fret}-f${nM.fret}-f${nH.fret}`;
+
+                                    if (!shapes.some(s => s.id === shapeId)) {
+                                        shapes.push({
+                                            id: shapeId,
+                                            stringSet: set.id,
+                                            inversion: inversion,
+                                            notes: [nL, nM, nH] // Lowest pitch to highest
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    });
+                }
+            });
+
+            return shapes;
+        }
+
+        /**
+         * RENDER FUNCTIONS
+         */
+        function renderFretNumbers() {
+            const container = document.getElementById('fret-numbers');
+            let html = '<div class="fret-number-cell nut">Nut</div>';
+            for (let f = 1; f <= TOTAL_FRETS; f++) {
+                html += `<div class="fret-number-cell">${f}</div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function renderInlays() {
+            const container = document.getElementById('inlay-layer');
+            const singleInlays = [3, 5, 7, 9, 15, 17, 19, 21];
+            const doubleInlays = [12, 24];
+
+            let html = '';
+            for (let f = 1; f <= TOTAL_FRETS; f++) {
+                html += '<div class="inlay-cell">';
+                if (singleInlays.includes(f)) {
+                    html += '<div class="inlay-dot"></div>';
+                } else if (doubleInlays.includes(f)) {
+                    html += '<div class="inlay-double"><div class="inlay-dot"></div><div class="inlay-dot"></div></div>';
+                }
+                html += '</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        function renderFretboard(allShapes) {
+            const container = document.getElementById('strings-container');
+            const members = getTriadMembers(state.key, state.quality);
+
+            // Filter active shapes based on user dropdowns
+            const filteredShapes = allShapes.filter(s => {
+                const matchSet = (state.stringSet === 'all' || state.stringSet === s.stringSet);
+                const matchInv = (state.inversion === 'all' || state.inversion === s.inversion);
+                const matchSel = state.selectedShapeId ? (state.selectedShapeId === s.id) : true;
+                return matchSet && matchInv && matchSel;
+            });
+
+            // Active node map
+            const activeMap = new Map();
+            filteredShapes.forEach(shape => {
+                shape.notes.forEach(n => {
+                    const key = `${n.stringIdx}-${n.fret}`;
+                    activeMap.set(key, n);
+                });
+            });
+
+            let html = '';
+
+            for (let sIdx = 0; sIdx < 6; sIdx++) {
+                const tuningObj = TUNING[sIdx];
+                const wireThickness = (sIdx + 1) * 0.5 + 1.2;
+
+                html += `<div class="string-row">`;
+                html += `<div class="string-wire" style="height: ${wireThickness}px;"></div>`;
+                html += `<div class="tuning-label">${tuningObj.name}</div>`;
+
+                // Nut (Fret 0)
+                const nutNote = getFretNote(sIdx, 0);
+                const nutActive = activeMap.get(`${sIdx}-0`);
+                const nutMember = members.find(m => m.pitch === nutNote.pitch);
+
+                html += `<div class="fret-cell nut-cell">`;
+                if (nutActive) {
+                    const label = state.displayMode === 'notes' ? nutActive.note : nutActive.degree;
+                    html += `<div class="note-badge role-${nutActive.role}" onclick="audio.playMidiNote(${nutActive.midi})">${label}</div>`;
+                } else if (nutMember) {
+                    const label = state.displayMode === 'notes' ? nutMember.note : nutMember.degree;
+                    html += `<div class="note-badge role-${nutMember.role} ghost-note" onclick="audio.playMidiNote(${nutNote.midi})">${label}</div>`;
+                }
+                html += `</div>`;
+
+                // Frets 1 - 24
+                for (let f = 1; f <= TOTAL_FRETS; f++) {
+                    const fretNote = getFretNote(sIdx, f);
+                    const activeNode = activeMap.get(`${sIdx}-${f}`);
+                    const memberMatch = members.find(m => m.pitch === fretNote.pitch);
+
+                    html += `<div class="fret-cell">`;
+                    if (activeNode) {
+                        const label = state.displayMode === 'notes' ? activeNode.note : activeNode.degree;
+                        html += `<div class="note-badge role-${activeNode.role}" onclick="audio.playMidiNote(${activeNode.midi})">${label}</div>`;
+                    } else if (memberMatch) {
+                        const label = state.displayMode === 'notes' ? memberMatch.note : memberMatch.degree;
+                        html += `<div class="note-badge role-${memberMatch.role} ghost-note" onclick="audio.playMidiNote(${fretNote.midi})">${label}</div>`;
+                    }
+                    html += `</div>`;
+                }
+
+                html += `</div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function renderVoiceCards(shapes) {
+            const grid = document.getElementById('cards-grid');
+            const countBadge = document.getElementById('shape-count-badge');
+
+            const filteredShapes = shapes.filter(s => {
+                const matchSet = (state.stringSet === 'all' || state.stringSet === s.stringSet);
+                const matchInv = (state.inversion === 'all' || state.inversion === s.inversion);
+                return matchSet && matchInv;
+            });
+
+            countBadge.textContent = `${filteredShapes.length} Shapes Found`;
+
+            if (filteredShapes.length === 0) {
+                grid.innerHTML = `<div class="empty-state">No triad voicings match the selected string set and inversion filters.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filteredShapes.map(shape => {
+                const isSelected = state.selectedShapeId === shape.id;
+                const notesStr = shape.notes.map(n => n.note).join(' - ');
+                const frets = shape.notes.map(n => n.fret);
+                const minF = Math.min(...frets);
+                const maxF = Math.max(...frets);
+                const fretRangeStr = minF === maxF ? `Fret ${minF}` : `Frets ${minF} - ${maxF}`;
+
+                return `
+                    <div class="voice-card ${isSelected ? 'selected' : ''}" onclick="selectShapeCard('${shape.id}')">
+                        <div class="card-top">
+                            <span class="card-inversion">${shape.inversion.toUpperCase()} POS</span>
+                            <span class="card-stringset">Strings ${shape.stringSet}</span>
+                        </div>
+                        <div class="card-notes">${notesStr}</div>
+                        <div class="card-footer">
+                            <span>${fretRangeStr}</span>
+                            <button class="card-play-btn" onclick="event.stopPropagation(); playShapeAudio('${shape.id}')">▶ Strum</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateSummary() {
+            const members = getTriadMembers(state.key, state.quality);
+            const notesStr = members.map(m => m.note).join(' - ');
+
+            document.getElementById('summary-title').textContent = `${state.key} ${state.quality}`;
+            document.getElementById('summary-notes').textContent = notesStr;
+        }
+
+        function selectShapeCard(shapeId) {
+            if (state.selectedShapeId === shapeId) {
+                state.selectedShapeId = null; // Toggle off filter
+            } else {
+                state.selectedShapeId = shapeId;
+                playShapeAudio(shapeId);
+            }
+            updateApp();
+        }
+
+        function playShapeAudio(shapeId) {
+            const shapes = calculateTriadShapes();
+            const shape = shapes.find(s => s.id === shapeId);
+            if (shape) {
+                audio.strum(shape.notes);
+            }
+        }
+
+        function updateApp() {
+            const shapes = calculateTriadShapes();
+            updateSummary();
+            renderFretboard(shapes);
+            renderVoiceCards(shapes);
+        }
+
+        /**
+         * INITIALIZATION & EVENT LISTENERS
+         */
+        window.addEventListener('DOMContentLoaded', () => {
+            // Populate Keys Select
+            const keySelect = document.getElementById('select-key');
+            keySelect.innerHTML = KEYS.map(k => `<option value="${k}">${k}</option>`).join('');
+            keySelect.value = state.key;
+
+            // Render static fretboard background elements
+            renderFretNumbers();
+            renderInlays();
+
+            // Initial view update
+            updateApp();
+
+            // Event Listeners
+            keySelect.addEventListener('change', (e) => {
+                state.key = e.target.value;
+                state.selectedShapeId = null;
+                updateApp();
+            });
+
+            document.getElementById('select-quality').addEventListener('change', (e) => {
+                state.quality = e.target.value;
+                state.selectedShapeId = null;
+                updateApp();
+            });
+
+            document.getElementById('select-stringset').addEventListener('change', (e) => {
+                state.stringSet = e.target.value;
+                state.selectedShapeId = null;
+                updateApp();
+            });
+
+            document.getElementById('select-inversion').addEventListener('change', (e) => {
+                state.inversion = e.target.value;
+                state.selectedShapeId = null;
+                updateApp();
+            });
+
+            // Display Mode Toggles
+            const btnNotes = document.getElementById('btn-mode-notes');
+            const btnDegrees = document.getElementById('btn-mode-degrees');
+
+            btnNotes.addEventListener('click', () => {
+                state.displayMode = 'notes';
+                btnNotes.classList.add('active');
+                btnDegrees.classList.remove('active');
+                updateApp();
+            });
+
+            btnDegrees.addEventListener('click', () => {
+                state.displayMode = 'degrees';
+                btnDegrees.classList.add('active');
+                btnNotes.classList.remove('active');
+                updateApp();
+            });
+
+            // Header Audio Controls
+            document.getElementById('btn-strum').addEventListener('click', () => {
+                const shapes = calculateTriadShapes();
+                const filtered = shapes.filter(s => {
+                    const matchSet = (state.stringSet === 'all' || state.stringSet === s.stringSet);
+                    const matchInv = (state.inversion === 'all' || state.inversion === s.inversion);
+                    return matchSet && matchInv;
+                });
+
+                if (state.selectedShapeId) {
+                    playShapeAudio(state.selectedShapeId);
+                } else if (filtered.length > 0) {
+                    audio.strum(filtered[0].notes);
+                }
+            });
+
+            document.getElementById('btn-arpeggio').addEventListener('click', () => {
+                const shapes = calculateTriadShapes();
+                const filtered = shapes.filter(s => {
+                    const matchSet = (state.stringSet === 'all' || state.stringSet === s.stringSet);
+                    const matchInv = (state.inversion === 'all' || state.inversion === s.inversion);
+                    return matchSet && matchInv;
+                });
+
+                if (state.selectedShapeId) {
+                    const shape = shapes.find(s => s.id === state.selectedShapeId);
+                    if (shape) audio.arpeggiate(shape.notes);
+                } else if (filtered.length > 0) {
+                    audio.arpeggiate(filtered[0].notes);
+                }
+            });
+
+            document.getElementById('volume-slider').addEventListener('input', (e) => {
+                state.volume = parseFloat(e.target.value);
+            });
+        });
+    </script>
+</body>
+</html>
