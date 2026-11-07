@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guitar Triads Explained — Complete Visual Guide + Interactive Tool</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --surface: #1a2332;
+    --surface2: #243044;
+    --border: #2d3a4f;
+    --text: #e8eef7;
+    --text-muted: #9fb0c7;
+    --accent: #3b82f6;
+    --accent2: #22c55e;
+    --major: #3b82f6;
+    --minor: #a855f7;
+    --dim: #ef4444;
+    --aug: #f59e0b;
+    --root: #22c55e;
+    --third: #3b82f6;
+    --fifth: #f59e0b;
+    --string: #4b5c73;
+    --fret: #2d3a4f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 17px;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 80px; }
+
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 20px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 20%, rgba(59,130,246,0.15), transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(34,197,94,0.1), transparent 50%);
+    pointer-events: none;
+  }
+  header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  header p {
+    color: var(--text-muted);
+    font-size: 1.15rem;
+    max-width: 640px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(59,130,246,0.15);
+    color: #93c5fd;
+    border: 1px solid rgba(59,130,246,0.3);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 18px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  nav.toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 28px;
+    margin: 32px 0 48px;
+  }
+  nav.toc h2 { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+  nav.toc ol { padding-left: 22px; columns: 2; column-gap: 32px; }
+  nav.toc li { margin: 6px 0; break-inside: avoid; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 64px; }
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: -0.02em;
+  }
+  h3 {
+    font-size: 1.3rem;
+    font-weight: 650;
+    margin: 32px 0 12px;
+    color: #f1f5f9;
+  }
+  h4 { font-size: 1.05rem; font-weight: 600; margin: 20px 0 8px; color: #cbd5e1; }
+  p { margin-bottom: 14px; color: #d1d9e6; }
+  ul, ol { margin: 12px 0 16px 24px; color: #d1d9e6; }
+  li { margin-bottom: 6px; }
+  strong { color: #f8fafc; }
+  .lead { font-size: 1.1rem; color: var(--text-muted); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin: 20px 0;
+  }
+  .card.highlight {
+    border-color: rgba(59,130,246,0.4);
+    background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(34,197,94,0.05));
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.95rem;
+  }
+  th, td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    background: var(--surface2);
+    color: #cbd5e1;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+  }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .formula-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .formula-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+  }
+  .formula-card .quality {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .formula-card.major .quality { color: var(--major); }
+  .formula-card.minor .quality { color: var(--minor); }
+  .formula-card.dim .quality { color: var(--dim); }
+  .formula-card.aug .quality { color: var(--aug); }
+  .formula-card .intervals {
+    font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 8px 0;
+  }
+  .formula-card .notes { color: var(--text-muted); font-size: 0.9rem; }
+
+  /* Fretboard diagrams (static) */
+  .diagram-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin: 24px 0;
+    justify-content: flex-start;
+  }
+  .fretboard-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px 14px;
+    min-width: 180px;
+  }
+  .fretboard-wrap .label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #e2e8f0;
+    text-align: center;
+  }
+  .fretboard-wrap .sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .fretboard {
+    display: grid;
+    grid-template-columns: 28px repeat(5, 32px);
+    gap: 0;
+    font-size: 0.7rem;
+    user-select: none;
+  }
+  .fretboard .string-label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 6px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .fretboard .cell {
+    width: 32px;
+    height: 28px;
+    border-right: 1px solid var(--fret);
+    border-bottom: 1px solid var(--string);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fretboard .cell.nut {
+    border-left: 3px solid #94a3b8;
+  }
+  .fretboard .dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #0f172a;
+    z-index: 2;
+  }
+  .dot.root { background: var(--root); }
+  .dot.third { background: var(--third); color: white; }
+  .dot.fifth { background: var(--fifth); }
+  .dot.b3 { background: var(--minor); color: white; }
+  .dot.b5 { background: var(--dim); color: white; }
+  .dot.s5 { background: var(--aug); }
+  .fret-num {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    padding-top: 4px;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 16px 0;
+    font-size: 0.85rem;
+  }
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend .swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+  }
+
+  .inversion-table td:first-child { font-weight: 600; }
+
+  .tip {
+    background: rgba(34,197,94,0.08);
+    border-left: 4px solid var(--accent2);
+    padding: 14px 18px;
+    margin: 20px 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .tip strong { color: var(--accent2); }
+
+  .warning {
+    background: rgba(245,158,11,0.08);
+    border-left: 4px solid var(--aug);
+    padding: 14px 18px;
+    margin: 20px 0;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .progression {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 16px 0;
+    align-items: center;
+  }
+  .chord-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 600;
+    min-width: 70px;
+    text-align: center;
+  }
+  .arrow { color: var(--text-muted); font-size: 1.2rem; }
+
+  /* ========== INTERACTIVE TOOL STYLES ========== */
+  .tool-section {
+    background: linear-gradient(180deg, #0c1220 0%, var(--bg) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin: 40px 0 56px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  }
+  .tool-section h2 {
+    border-bottom: none;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .tool-section h2 .live {
+    font-size: 0.7rem;
+    background: #22c55e;
+    color: #052e16;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .tool-desc {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    max-width: 720px;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-end;
+    margin-bottom: 28px;
+    padding: 20px;
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .control-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+  .control-group select, .control-group button {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    min-width: 120px;
+    cursor: pointer;
+  }
+  .control-group select:focus, .control-group button:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .quality-toggle {
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .quality-toggle button {
+    border: none;
+    border-radius: 0;
+    min-width: 90px;
+    background: var(--surface2);
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .quality-toggle button.active.major {
+    background: var(--major);
+    color: white;
+  }
+  .quality-toggle button.active.minor {
+    background: var(--minor);
+    color: white;
+  }
+  .quality-toggle button:hover:not(.active) {
+    background: #2d3a4f;
+  }
+
+  .info-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 28px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+  }
+  .info-bar .item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .info-bar .item .key {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .info-bar .item .val {
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+  .note-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .note-pill {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #0f172a;
+  }
+  .note-pill.root { background: var(--root); }
+  .note-pill.third { background: var(--third); color: white; }
+  .note-pill.b3 { background: var(--minor); color: white; }
+  .note-pill.fifth { background: var(--fifth); }
+
+  /* Full fretboard */
+  .full-fretboard-container {
+    overflow-x: auto;
+    padding-bottom: 12px;
+    margin: 0 -8px;
+  }
+  .full-fretboard {
+    display: inline-block;
+    min-width: 100%;
+  }
+  .fb-header {
+    display: grid;
+    grid-template-columns: 42px repeat(13, 48px);
+    gap: 0;
+    margin-bottom: 2px;
+  }
+  .fb-header .fret-label {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 4px 0;
+  }
+  .fb-header .fret-label.open { color: #94a3b8; }
+  .fb-row {
+    display: grid;
+    grid-template-columns: 42px repeat(13, 48px);
+    gap: 0;
+    height: 36px;
+    align-items: center;
+  }
+  .fb-row .string-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-align: right;
+    padding-right: 10px;
+  }
+  .fb-cell {
+    width: 48px;
+    height: 36px;
+    border-right: 1px solid #2a3548;
+    border-bottom: 1px solid #3d4d63;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fb-row:last-child .fb-cell {
+    border-bottom: 2px solid #64748b;
+  }
+  .fb-cell.open-string {
+    border-left: 3px solid #94a3b8;
+  }
+  .fb-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: #0f172a;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    z-index: 2;
+    transition: transform 0.12s;
+    letter-spacing: -0.03em;
+  }
+  .fb-dot:hover { transform: scale(1.15); }
+  .fb-dot.root { background: var(--root); }
+  .fb-dot.third { background: var(--third); color: white; }
+  .fb-dot.b3 { background: var(--minor); color: white; }
+  .fb-dot.fifth { background: var(--fifth); }
+  .fb-dot.isolated {
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.35), 0 2px 8px rgba(0,0,0,0.5);
+    transform: scale(1.08);
+  }
+  .fb-dot.ghost {
+    background: transparent;
+    border: 1.5px dashed #4b5c73;
+    color: #64748b;
+    box-shadow: none;
+    font-weight: 600;
+    opacity: 0.55;
+  }
+
+  /* Large shape overlay */
+  .large-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.72);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .large-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+  .large-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px 22px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .large-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #f1f5f9;
+  }
+  .large-sub {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .large-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .large-close:hover { background: #3d4d63; color: white; }
+  .large-body {
+    padding: 28px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .large-meta {
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+  }
+  .large-meta strong { color: var(--text); }
+  .large-nav {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 16px 22px 22px;
+    border-top: 1px solid var(--border);
+  }
+  .large-nav button {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .large-nav button:hover { background: #3d4d63; }
+
+  /* Large diagram grid */
+  .lg-fretboard {
+    display: grid;
+    gap: 0;
+    font-size: 0.85rem;
+    user-select: none;
+  }
+  .lg-fretboard .lg-row {
+    display: contents;
+  }
+  .lg-label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .lg-cell {
+    width: 52px;
+    height: 48px;
+    border-right: 1px solid var(--fret);
+    border-bottom: 1px solid var(--string);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .lg-cell.nut { border-left: 4px solid #94a3b8; }
+  .lg-dot {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #0f172a;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  }
+  .lg-dot.root { background: var(--root); }
+  .lg-dot.third { background: var(--third); color: white; }
+  .lg-dot.b3 { background: var(--minor); color: white; }
+  .lg-dot.fifth { background: var(--fifth); }
+  .lg-fret-num {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding-top: 6px;
+  }
+
+  /* Inversion chips under the board */
+  .inversion-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .inv-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    min-width: 160px;
+    cursor: default;
+  }
+  .inv-chip .inv-name {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .inv-chip .inv-notes {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .inv-chip .inv-bass {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .open-chord-preview {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .open-chord-preview h4 {
+    margin-bottom: 12px;
+  }
+  .open-shapes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .open-shape-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-align: center;
+    min-width: 140px;
+  }
+  .open-shape-card .name {
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .open-shape-card .fretting {
+    font-family: ui-monospace, monospace;
+    font-size: 0.95rem;
+    color: #93c5fd;
+    letter-spacing: 0.05em;
+  }
+  .open-shape-card .hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  footer a { color: var(--accent); }
+
+  /* Page navigation */
+  .page-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 20, 25, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .page-nav button {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .page-nav button:hover { background: var(--surface2); color: var(--text); }
+  .page-nav button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Lesson page styles */
+  .lesson-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    margin: 20px 0 28px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+  .lesson-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .lesson-meta strong { color: var(--text); }
+
+  .timeline {
+    border-left: 3px solid var(--border);
+    margin: 24px 0 32px 8px;
+    padding-left: 24px;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 28px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -31px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+  .timeline-item .time {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .timeline-item h4 {
+    margin: 0 0 8px;
+    color: #f1f5f9;
+  }
+  .timeline-item p, .timeline-item ul {
+    margin-bottom: 8px;
+    color: #c5d0e0;
+  }
+
+  .diff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .diff-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .diff-card h4 {
+    margin: 0 0 8px;
+    font-size: 0.95rem;
+  }
+  .diff-card.beginner h4 { color: var(--accent2); }
+  .diff-card.intermediate h4 { color: var(--major); }
+  .diff-card.advanced h4 { color: var(--aug); }
+  .diff-card p { font-size: 0.9rem; margin: 0; color: var(--text-muted); }
+
+  .activity-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin: 16px 0;
+  }
+  .activity-box h4 {
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .activity-box .tag {
+    font-size: 0.65rem;
+    background: rgba(59,130,246,0.2);
+    color: #93c5fd;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+
+  @media (max-width: 700px) {
+    nav.toc ol { columns: 1; }
+    .fb-header, .fb-row {
+      grid-template-columns: 36px repeat(13, 38px);
+    }
+    .fb-cell { width: 38px; height: 32px; }
+    .fb-dot { width: 24px; height: 24px; font-size: 0.58rem; }
+    .controls { flex-direction: column; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-nav">
+  <button type="button" class="active" data-page="guide">Guide &amp; Interactive Tool</button>
+  <button type="button" data-page="lesson">Lesson Plan for Teachers</button>
+</div>
+
+<!-- ==================== PAGE 1: GUIDE ==================== -->
+<div id="page-guide" class="page active">
+
+<header>
+  <div class="badge">Complete Visual Reference + Interactive Tool</div>
+  <h1>Guitar Triads Explained</h1>
+  <p>A super-detailed breakdown of triad construction, the four qualities, inversions, and movable shapes — plus a live tool that maps any major/minor chord across the entire fretboard.</p>
+</header>
+
+<div class="container">
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#tool">Interactive Triad Mapper (Major / Minor)</a></li>
+    <li><a href="#what">What is a Triad?</a></li>
+    <li><a href="#construction">How Triads Are Built</a></li>
+    <li><a href="#qualities">The Four Triad Qualities</a></li>
+    <li><a href="#major">Major Triads — Shapes</a></li>
+    <li><a href="#minor">Minor Triads — Shapes</a></li>
+    <li><a href="#diminished">Diminished Triads</a></li>
+    <li><a href="#augmented">Augmented Triads</a></li>
+    <li><a href="#inversions">Triad Inversions</a></li>
+    <li><a href="#string-sets">Shapes by String Set</a></li>
+    <li><a href="#neck">Connecting Across the Neck</a></li>
+    <li><a href="#progressions">Smooth Progressions</a></li>
+    <li><a href="#practice">Practice Tips</a></li>
+  </ol>
+</nav>
+
+<!-- ==================== INTERACTIVE TOOL ==================== -->
+<section id="tool" class="tool-section">
+  <h2>Interactive Triad Mapper <span class="live">LIVE</span></h2>
+  <p class="tool-desc">
+    Select any major or minor chord. Switch between <strong>All notes</strong> (every occurrence on the neck) and
+    <strong>Isolate shape</strong> to step through individual close-position triad shapes one at a time by string set and inversion.
+  </p>
+
+  <div class="controls">
+    <div class="control-group">
+      <label>Root Note</label>
+      <select id="rootSelect">
+        <option value="C">C</option>
+        <option value="C#">C# / Db</option>
+        <option value="D">D</option>
+        <option value="D#">D# / Eb</option>
+        <option value="E">E</option>
+        <option value="F">F</option>
+        <option value="F#">F# / Gb</option>
+        <option value="G">G</option>
+        <option value="G#">G# / Ab</option>
+        <option value="A" selected>A</option>
+        <option value="A#">A# / Bb</option>
+        <option value="B">B</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>Quality</label>
+      <div class="quality-toggle">
+        <button type="button" id="btnMajor" class="active major">Major</button>
+        <button type="button" id="btnMinor">Minor</button>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label>Quick Open Chords</label>
+      <select id="openPreset">
+        <option value="">— choose preset —</option>
+        <option value="C-major">C major</option>
+        <option value="A-major">A major</option>
+        <option value="G-major">G major</option>
+        <option value="E-major">E major</option>
+        <option value="D-major">D major</option>
+        <option value="A-minor">A minor</option>
+        <option value="E-minor">E minor</option>
+        <option value="D-minor">D minor</option>
+        <option value="F-major">F major</option>
+        <option value="B-minor">B minor</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>View Mode</label>
+      <div class="quality-toggle" id="viewModeToggle">
+        <button type="button" id="btnViewAll" class="active" style="min-width:100px">All notes</button>
+        <button type="button" id="btnViewIsolate" style="min-width:100px">Isolate shape</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls" id="isolateControls" style="display:none; margin-top:-12px;">
+    <div class="control-group">
+      <label>String Set</label>
+      <select id="stringSetSelect">
+        <option value="0">1–2–3 (e B G)</option>
+        <option value="1">2–3–4 (B G D)</option>
+        <option value="2">3–4–5 (G D A)</option>
+        <option value="3">4–5–6 (D A E)</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>Position / Inversion</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button type="button" id="btnPrevShape" title="Previous shape" style="min-width:44px;padding:10px 12px;">←</button>
+        <select id="shapeSelect" style="min-width:200px"></select>
+        <button type="button" id="btnNextShape" title="Next shape" style="min-width:44px;padding:10px 12px;">→</button>
+      </div>
+    </div>
+    <div class="control-group">
+      <label>&nbsp;</label>
+      <button type="button" id="btnShowLarge" style="background:var(--accent);border-color:var(--accent);color:white;min-width:140px;">Show large</button>
+    </div>
+    <div class="control-group" style="justify-content:flex-end;">
+      <label>&nbsp;</label>
+      <div id="shapeInfo" style="font-size:0.9rem;color:var(--text-muted);padding:8px 0;"></div>
+    </div>
+  </div>
+
+  <!-- Large isolated shape overlay -->
+  <div id="largeShapeOverlay" class="large-overlay" style="display:none;" aria-hidden="true">
+    <div class="large-panel">
+      <div class="large-panel-header">
+        <div>
+          <div class="large-title" id="largeTitle">Triad shape</div>
+          <div class="large-sub" id="largeSub"></div>
+        </div>
+        <button type="button" id="btnCloseLarge" class="large-close" title="Close">×</button>
+      </div>
+      <div class="large-body">
+        <div id="largeDiagram"></div>
+        <div class="large-meta" id="largeMeta"></div>
+      </div>
+      <div class="large-nav">
+        <button type="button" id="btnLargePrev">← Previous</button>
+        <button type="button" id="btnLargeNext">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-bar" id="infoBar">
+    <!-- filled by JS -->
+  </div>
+
+  <div class="legend" style="margin-bottom:16px;">
+    <span><span class="swatch" style="background:var(--root)"></span> Root</span>
+    <span><span class="swatch" style="background:var(--third)"></span> Major 3rd</span>
+    <span><span class="swatch" style="background:var(--minor)"></span> Minor 3rd (♭3)</span>
+    <span><span class="swatch" style="background:var(--fifth)"></span> Perfect 5th</span>
+  </div>
+
+  <div class="full-fretboard-container">
+    <div class="full-fretboard" id="fullFretboard">
+      <!-- generated by JS -->
+    </div>
+  </div>
+
+  <div class="inversion-chips" id="inversionChips">
+    <!-- generated by JS -->
+  </div>
+
+  <div class="open-chord-preview" id="openPreview">
+    <!-- generated by JS -->
+  </div>
+</section>
+
+<!-- ==================== WHAT IS A TRIAD ==================== -->
+<section id="what">
+  <h2>1. What is a Triad?</h2>
+  <p class="lead">A triad is simply a chord made of <strong>three different notes</strong>. Not just any three notes — they follow a specific “recipe” of intervals.</p>
+
+  <div class="card highlight">
+    <p><strong>Key idea:</strong> Chords are not defined by note names (C, E, G…) but by the <em>distances</em> (intervals) between those notes. Change the intervals and you change the quality (major, minor, etc.).</p>
+  </div>
+
+  <p>Every triad contains:</p>
+  <ul>
+    <li><strong>Root</strong> — the note the chord is named after (the “home” note)</li>
+    <li><strong>Third</strong> — a major 3rd or minor 3rd above the root (this largely determines major vs minor sound)</li>
+    <li><strong>Fifth</strong> — a perfect, diminished, or augmented 5th above the root</li>
+  </ul>
+
+  <p>On guitar we usually play these three notes on three adjacent strings in “close position” (notes packed as tightly as possible within an octave). These compact shapes are extremely useful for both rhythm and lead playing.</p>
+</section>
+
+<!-- ==================== CONSTRUCTION ==================== -->
+<section id="construction">
+  <h2>2. How Triads Are Built (Intervals on Guitar)</h2>
+
+  <p>Intervals are measured in <strong>semitones</strong> (one fret = one semitone on the same string).</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Interval</th>
+        <th>Semitones</th>
+        <th>Frets (same string)</th>
+        <th>Sound / Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Minor 3rd (m3)</td>
+        <td>3</td>
+        <td>3 frets</td>
+        <td>Darker, sadder quality</td>
+      </tr>
+      <tr>
+        <td>Major 3rd (M3)</td>
+        <td>4</td>
+        <td>4 frets</td>
+        <td>Bright, happy quality</td>
+      </tr>
+      <tr>
+        <td>Perfect 5th (P5)</td>
+        <td>7</td>
+        <td>7 frets</td>
+        <td>Stable, strong foundation</td>
+      </tr>
+      <tr>
+        <td>Diminished 5th (♭5)</td>
+        <td>6</td>
+        <td>6 frets</td>
+        <td>Tense, unstable (tritone)</td>
+      </tr>
+      <tr>
+        <td>Augmented 5th (#5)</td>
+        <td>8</td>
+        <td>8 frets</td>
+        <td>Bright tension, outer-space feel</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip">
+    <strong>Tip:</strong> When notes are on different strings you still count the total semitone distance, taking into account that adjacent strings are tuned a perfect 4th (5 frets) apart (except G→B which is a major 3rd / 4 frets).
+  </div>
+</section>
+
+<!-- ==================== QUALITIES ==================== -->
+<section id="qualities">
+  <h2>3. The Four Triad Qualities</h2>
+  <p>There are four fundamental triad “flavours”. Major and minor are by far the most common; diminished and augmented add tension and colour.</p>
+
+  <div class="formula-grid">
+    <div class="formula-card major">
+      <div class="quality">Major</div>
+      <div class="intervals">R – M3 – P5</div>
+      <div class="notes">1 – 3 – 5<br>e.g. C–E–G</div>
+    </div>
+    <div class="formula-card minor">
+      <div class="quality">Minor</div>
+      <div class="intervals">R – m3 – P5</div>
+      <div class="notes">1 – ♭3 – 5<br>e.g. C–E♭–G</div>
+    </div>
+    <div class="formula-card dim">
+      <div class="quality">Diminished</div>
+      <div class="intervals">R – m3 – ♭5</div>
+      <div class="notes">1 – ♭3 – ♭5<br>e.g. C–E♭–G♭</div>
+    </div>
+    <div class="formula-card aug">
+      <div class="quality">Augmented</div>
+      <div class="intervals">R – M3 – #5</div>
+      <div class="notes">1 – 3 – #5<br>e.g. C–E–G#</div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><span class="swatch" style="background:var(--root)"></span> Root (R / 1)</span>
+    <span><span class="swatch" style="background:var(--third)"></span> Major 3rd</span>
+    <span><span class="swatch" style="background:var(--minor)"></span> Minor 3rd (♭3)</span>
+    <span><span class="swatch" style="background:var(--fifth)"></span> Perfect 5th</span>
+    <span><span class="swatch" style="background:var(--dim)"></span> Diminished 5th (♭5)</span>
+    <span><span class="swatch" style="background:var(--aug)"></span> Augmented 5th (#5)</span>
+  </div>
+</section>
+
+<!-- ==================== MAJOR ==================== -->
+<section id="major">
+  <h2>4. Major Triads — Shapes &amp; Visual Examples</h2>
+  <p>Recipe: <strong>Root + Major 3rd + Perfect 5th</strong> (4 semitones + 3 semitones).</p>
+  <p>Bright, stable, “happy” sound. The backbone of most popular music.</p>
+
+  <h3>C Major Triad — Strings 1-2-3 (high E, B, G)</h3>
+  <p>These are the most common “top-three-string” shapes. Extremely useful for rhythm fills and lead work.</p>
+
+  <div class="diagram-row">
+    <div class="fretboard-wrap">
+      <div class="label">Root Position</div>
+      <div class="sub">C – E – G &nbsp;·&nbsp; frets 5-5-3</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot fifth">5</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot third">3</div></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div>
+        <div class="string-label"></div>
+        <div class="fret-num">3</div><div class="fret-num">4</div><div class="fret-num">5</div><div class="fret-num">6</div><div class="fret-num">7</div>
+      </div>
+    </div>
+    <div class="fretboard-wrap">
+      <div class="label">1st Inversion</div>
+      <div class="sub">E – G – C &nbsp;·&nbsp; frets 9-8-8</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div><div class="cell"></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot fifth">5</div></div><div class="cell"></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot third">3</div></div>
+        <div class="string-label"></div>
+        <div class="fret-num">7</div><div class="fret-num">8</div><div class="fret-num">9</div><div class="fret-num">10</div><div class="fret-num">11</div>
+      </div>
+    </div>
+    <div class="fretboard-wrap">
+      <div class="label">2nd Inversion</div>
+      <div class="sub">G – C – E &nbsp;·&nbsp; frets 12-13-12</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot third">3</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div><div class="cell"></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot fifth">5</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label"></div>
+        <div class="fret-num">11</div><div class="fret-num">12</div><div class="fret-num">13</div><div class="fret-num">14</div><div class="fret-num">15</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>C Major — Strings 2-3-4 (B, G, D)</h3>
+  <div class="diagram-row">
+    <div class="fretboard-wrap">
+      <div class="label">Root Position</div>
+      <div class="sub">C – E – G &nbsp;·&nbsp; frets 10-9-8</div>
+      <div class="fretboard">
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot fifth">5</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot third">3</div></div><div class="cell"></div>
+        <div class="string-label">D</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div>
+        <div class="string-label"></div>
+        <div class="fret-num">7</div><div class="fret-num">8</div><div class="fret-num">9</div><div class="fret-num">10</div><div class="fret-num">11</div>
+      </div>
+    </div>
+    <div class="fretboard-wrap">
+      <div class="label">1st Inversion</div>
+      <div class="sub">E – G – C &nbsp;·&nbsp; frets 2-0-1</div>
+      <div class="fretboard">
+        <div class="string-label">B</div>
+        <div class="cell nut"><div class="dot root">R</div></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"><div class="dot fifth">5</div></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">D</div>
+        <div class="cell nut"></div><div class="cell"><div class="dot third">3</div></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label"></div>
+        <div class="fret-num">0</div><div class="fret-num">1</div><div class="fret-num">2</div><div class="fret-num">3</div><div class="fret-num">4</div>
+      </div>
+    </div>
+    <div class="fretboard-wrap">
+      <div class="label">2nd Inversion</div>
+      <div class="sub">G – C – E &nbsp;·&nbsp; frets 5-5-5</div>
+      <div class="fretboard">
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot third">3</div></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div>
+        <div class="string-label">D</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot fifth">5</div></div>
+        <div class="string-label"></div>
+        <div class="fret-num">2</div><div class="fret-num">3</div><div class="fret-num">4</div><div class="fret-num">5</div><div class="fret-num">6</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4>Quick Reference — Movable Major Shapes (any root)</h4>
+    <p>Once you know the shape relative to the root, you can move it anywhere. The root note tells you the name of the chord.</p>
+    <ul>
+      <li>Find the root on the string you want → place the corresponding shape around it.</li>
+      <li>The same three geometric shapes repeat for every major triad on a given string set.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== MINOR ==================== -->
+<section id="minor">
+  <h2>5. Minor Triads — Shapes &amp; Visual Examples</h2>
+  <p>Recipe: <strong>Root + Minor 3rd + Perfect 5th</strong> (3 semitones + 4 semitones).</p>
+  <p>Darker, more melancholic sound. Formed simply by lowering the 3rd of a major triad by one fret.</p>
+
+  <h3>A Minor Triad — Strings 1-2-3</h3>
+  <div class="diagram-row">
+    <div class="fretboard-wrap">
+      <div class="label">Root Position</div>
+      <div class="sub">A – C – E &nbsp;·&nbsp; frets 5-5-5</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot fifth">5</div></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot b3">♭3</div></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div>
+        <div class="string-label"></div>
+        <div class="fret-num">2</div><div class="fret-num">3</div><div class="fret-num">4</div><div class="fret-num">5</div><div class="fret-num">6</div>
+      </div>
+    </div>
+    <div class="fretboard-wrap">
+      <div class="label">1st Inversion</div>
+      <div class="sub">C – E – A &nbsp;·&nbsp; frets 9-10-8</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot fifth">5</div></div><div class="cell"></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot b3">♭3</div></div>
+        <div class="string-label"></div>
+        <div class="fret-num">7</div><div class="fret-num">8</div><div class="fret-num">9</div><div class="fret-num">10</div><div class="fret-num">11</div>
+      </div>
+    </div>
+    <div class="fretboard-wrap">
+      <div class="label">2nd Inversion</div>
+      <div class="sub">E – A – C &nbsp;·&nbsp; frets 12-13-12</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot b3">♭3</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div><div class="cell"></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot fifth">5</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label"></div>
+        <div class="fret-num">11</div><div class="fret-num">12</div><div class="fret-num">13</div><div class="fret-num">14</div><div class="fret-num">15</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>Memory trick:</strong> Take any major triad shape and move the note that is the major 3rd down one fret. Instant minor triad.
+  </div>
+</section>
+
+<!-- ==================== DIMINISHED ==================== -->
+<section id="diminished">
+  <h2>6. Diminished Triads</h2>
+  <p>Recipe: <strong>Root + Minor 3rd + Diminished 5th</strong> (3 + 3 semitones).</p>
+  <p>Very tense, unstable sound. Often used as a leading-tone chord (vii°) that wants to resolve up a half-step to the tonic.</p>
+
+  <div class="diagram-row">
+    <div class="fretboard-wrap">
+      <div class="label">B Diminished — Root Pos</div>
+      <div class="sub">B – D – F &nbsp;·&nbsp; strings 1-2-3</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"><div class="dot b5">♭5</div></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot b3">♭3</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div><div class="cell"></div>
+        <div class="string-label"></div>
+        <div class="fret-num">1</div><div class="fret-num">2</div><div class="fret-num">3</div><div class="fret-num">4</div><div class="fret-num">5</div>
+      </div>
+    </div>
+    <div class="fretboard-wrap">
+      <div class="label">C Diminished example</div>
+      <div class="sub">C – E♭ – G♭ &nbsp;·&nbsp; frets 5-4-2</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"><div class="dot b5">♭5</div></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot b3">♭3</div></div><div class="cell"></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div>
+        <div class="string-label"></div>
+        <div class="fret-num">2</div><div class="fret-num">3</div><div class="fret-num">4</div><div class="fret-num">5</div><div class="fret-num">6</div>
+      </div>
+    </div>
+  </div>
+
+  <p>Because the intervals are symmetric (minor 3rds stacked), diminished triads repeat every three frets. This makes them easy to move around but also a little disorienting at first.</p>
+</section>
+
+<!-- ==================== AUGMENTED ==================== -->
+<section id="augmented">
+  <h2>7. Augmented Triads</h2>
+  <p>Recipe: <strong>Root + Major 3rd + Augmented 5th</strong> (4 + 4 semitones).</p>
+  <p>Bright, tense, “floating” or “outer-space” quality. Less common in pop/rock but very useful in jazz, film music, and as a chromatic colour.</p>
+
+  <div class="diagram-row">
+    <div class="fretboard-wrap">
+      <div class="label">C Augmented — Root Pos</div>
+      <div class="sub">C – E – G# &nbsp;·&nbsp; frets 5-5-4</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot s5">#5</div></div><div class="cell"></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot third">3</div></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div>
+        <div class="string-label"></div>
+        <div class="fret-num">2</div><div class="fret-num">3</div><div class="fret-num">4</div><div class="fret-num">5</div><div class="fret-num">6</div>
+      </div>
+    </div>
+    <div class="fretboard-wrap">
+      <div class="label">From Major → Augmented</div>
+      <div class="sub">Raise the 5th one fret</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot fifth">5</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot third">3</div></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div>
+        <div class="string-label"></div>
+        <div class="fret-num">3</div><div class="fret-num">4</div><div class="fret-num">5</div><div class="fret-num">6</div><div class="fret-num">7</div>
+      </div>
+      <p style="text-align:center;font-size:0.8rem;color:var(--text-muted);margin-top:8px;">↑ Raise the yellow note one fret</p>
+    </div>
+  </div>
+
+  <p>Like diminished triads, augmented triads are symmetric (major 3rds stacked) and therefore repeat every four frets.</p>
+</section>
+
+<!-- ==================== INVERSIONS ==================== -->
+<section id="inversions">
+  <h2>8. Triad Inversions Explained</h2>
+  <p>So far we have mostly shown <strong>root position</strong> (root is the lowest note). We can rearrange the same three notes so a different chord tone sits in the bass. These rearrangements are called <strong>inversions</strong>.</p>
+
+  <table class="inversion-table">
+    <thead>
+      <tr>
+        <th>Position</th>
+        <th>Order (low → high)</th>
+        <th>Bass note</th>
+        <th>Sound character</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Root Position</td>
+        <td>R – 3 – 5</td>
+        <td>Root</td>
+        <td>Most stable, grounded</td>
+      </tr>
+      <tr>
+        <td>1st Inversion</td>
+        <td>3 – 5 – R</td>
+        <td>Third</td>
+        <td>Slightly less stable, sweeter</td>
+      </tr>
+      <tr>
+        <td>2nd Inversion</td>
+        <td>5 – R – 3</td>
+        <td>Fifth</td>
+        <td>More “up in the air”, open</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="card highlight">
+    <p><strong>Why inversions matter:</strong></p>
+    <ol>
+      <li>Each inversion has a subtly different emotional colour.</li>
+      <li>They let you play the <em>same chord</em> in many places on the neck.</li>
+      <li>They enable extremely smooth voice-leading (notes move only a fret or two between chords).</li>
+    </ol>
+  </div>
+
+  <h3>G Major across the neck using inversions (strings 1-2-3)</h3>
+  <div class="diagram-row">
+    <div class="fretboard-wrap">
+      <div class="label">Root Pos (G)</div>
+      <div class="sub">G–B–D · frets 3-3-3</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot fifth">5</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot third">3</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label"></div>
+        <div class="fret-num">1</div><div class="fret-num">2</div><div class="fret-num">3</div><div class="fret-num">4</div><div class="fret-num">5</div>
+      </div>
+    </div>
+    <div class="fretboard-wrap">
+      <div class="label">1st Inv (B bass)</div>
+      <div class="sub">B–D–G · frets 7-6-6</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot fifth">5</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot third">3</div></div><div class="cell"></div>
+        <div class="string-label"></div>
+        <div class="fret-num">5</div><div class="fret-num">6</div><div class="fret-num">7</div><div class="fret-num">8</div><div class="fret-num">9</div>
+      </div>
+    </div>
+    <div class="fretboard-wrap">
+      <div class="label">2nd Inv (D bass)</div>
+      <div class="sub">D–G–B · frets 10-11-10</div>
+      <div class="fretboard">
+        <div class="string-label">e</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot third">3</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label">B</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"></div><div class="cell"><div class="dot root">R</div></div><div class="cell"></div>
+        <div class="string-label">G</div>
+        <div class="cell nut"></div><div class="cell"></div><div class="cell"><div class="dot fifth">5</div></div><div class="cell"></div><div class="cell"></div>
+        <div class="string-label"></div>
+        <div class="fret-num">9</div><div class="fret-num">10</div><div class="fret-num">11</div><div class="fret-num">12</div><div class="fret-num">13</div>
+      </div>
+    </div>
+  </div>
+  <p>Notice we are always playing the exact same three notes (G, B, D) — just starting on a different chord tone.</p>
+</section>
+
+<!-- ==================== STRING SETS ==================== -->
+<section id="string-sets">
+  <h2>9. Shapes by String Set</h2>
+  <p>There are four practical groups of three adjacent strings. Learning the three inversions on each set gives you complete coverage of the fretboard.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>String Set</th>
+        <th>Strings</th>
+        <th>Common Use</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Set 1</td>
+        <td>1 – 2 – 3 (e B G)</td>
+        <td>Most popular for melody + rhythm; bright tone</td>
+      </tr>
+      <tr>
+        <td>Set 2</td>
+        <td>2 – 3 – 4 (B G D)</td>
+        <td>Warm mid-range; great for chord melody</td>
+      </tr>
+      <tr>
+        <td>Set 3</td>
+        <td>3 – 4 – 5 (G D A)</td>
+        <td>Fuller body; good for supporting vocals</td>
+      </tr>
+      <tr>
+        <td>Set 4</td>
+        <td>4 – 5 – 6 (D A E)</td>
+        <td>Deep, powerful; less common for triads but useful</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warning">
+    <strong>Note on the B string:</strong> Because the interval between G and B is a major 3rd (4 frets) instead of a perfect 4th (5 frets), shapes that cross the G–B strings look slightly different from shapes that stay on the other strings. Always double-check the fingering when the shape involves those two strings.
+  </div>
+</section>
+
+<!-- ==================== NECK CONNECTION ==================== -->
+<section id="neck">
+  <h2>10. Connecting Triads Across the Neck</h2>
+  <p>One of the biggest benefits of learning inversions is the ability to stay in one area of the neck while changing chords, or to create ascending/descending lines that outline the harmony.</p>
+
+  <h3>Example: G major → G minor (same area)</h3>
+  <p>Simply lower the 3rd (B → B♭) in any G major shape. The rest of the notes stay put.</p>
+
+  <h3>Example: Moving a C major triad up the neck</h3>
+  <p>Root position → 1st inversion → 2nd inversion → root position (one octave higher). The top note climbs: G → C → E → G…</p>
+
+  <div class="tip">
+    <strong>Practice idea:</strong> Pick one chord (e.g. D major) and play all three inversions on strings 1-2-3, then move to strings 2-3-4 and repeat. Do the same for the minor version. This builds both muscle memory and fretboard knowledge.
+  </div>
+</section>
+
+<!-- ==================== PROGRESSIONS ==================== -->
+<section id="progressions">
+  <h2>11. Smooth Chord Progressions with Triads</h2>
+  <p>Because inversions let you keep common tones and move other voices by only a fret or two, triad progressions can sound much smoother than jumping between big open or barre chords.</p>
+
+  <h3>Classic example: Am – Dm – F – E</h3>
+  <div class="progression">
+    <div class="chord-box">Am</div>
+    <span class="arrow">→</span>
+    <div class="chord-box">Dm</div>
+    <span class="arrow">→</span>
+    <div class="chord-box">F</div>
+    <span class="arrow">→</span>
+    <div class="chord-box">E</div>
+  </div>
+  <p>Using close-position triads on the top three or four strings, each note typically moves by only one or two frets. The result is a flowing, connected sound that is perfect for intros, interludes, or fingerstyle arrangements.</p>
+
+  <h3>Try this yourself</h3>
+  <ul>
+    <li>Take a simple two-chord vamp (Am – F) and find as many ways as possible to switch between them using only triads on strings 1-2-3.</li>
+    <li>Play a I–vi–IV–V progression in C (C – Am – F – G) staying roughly between frets 5–10.</li>
+    <li>Arpeggiate the triads instead of strumming them — instant melodic material that perfectly outlines the harmony.</li>
+  </ul>
+</section>
+
+<!-- ==================== PRACTICE ==================== -->
+<section id="practice">
+  <h2>12. Practice Tips &amp; Next Steps</h2>
+
+  <div class="card">
+    <h4>Recommended practice path</h4>
+    <ol>
+      <li><strong>Master the four qualities</strong> in root position on one string set (start with strings 1-2-3).</li>
+      <li><strong>Add the two inversions</strong> so you have three shapes per quality.</li>
+      <li><strong>Move the shapes</strong> to different roots (C, G, D, A, E, F…).</li>
+      <li><strong>Connect inversions</strong> up and down the neck for a single chord.</li>
+      <li><strong>Apply to progressions</strong> — focus on minimal movement between chords.</li>
+      <li><strong>Expand to other string sets</strong> once the first set feels automatic.</li>
+    </ol>
+  </div>
+
+  <div class="tip">
+    <strong>Ear training bonus:</strong> Play a random triad shape and try to identify its quality (major/minor/dim/aug) and which inversion it is by ear before looking at your fretting hand. This dramatically improves both theory and improvisation.
+  </div>
+
+  <h3>Common mistakes to avoid</h3>
+  <ul>
+    <li>Learning shapes without knowing which note is the root — always be able to point to the root.</li>
+    <li>Only practising in one area of the neck.</li>
+    <li>Ignoring the sound of each inversion (they are not interchangeable emotionally).</li>
+    <li>Forgetting that the G–B string interval is different — shapes that cross it need a slight adjustment.</li>
+  </ul>
+
+  <div class="card highlight">
+    <p><strong>Remember:</strong> Knowing the theory is only the first step. The real power of triads appears when the shapes become automatic and you can grab the right inversion instantly for voice-leading, fills, or soloing. Spend time just playing and listening — the fretboard will start to make sense in a whole new way.</p>
+  </div>
+</section>
+
+<footer>
+  <p>Visual guide inspired by the excellent StringKick article<br>
+  <a href="https://www.stringkick.com/blog-lessons/guitar-triads/" target="_blank" rel="noopener">Guitar Triads Explained [Easy Guide] — StringKick</a></p>
+  <p style="margin-top:12px;font-size:0.8rem;">All diagrams are approximate close-position shapes for educational purposes. Always verify with your ear and a tuner.</p>
+</footer>
+
+</div><!-- /.container -->
+</div><!-- /#page-guide -->
+
+<!-- ==================== PAGE 2: LESSON PLAN ==================== -->
+<div id="page-lesson" class="page">
+
+<header>
+  <div class="badge">Teacher Resource</div>
+  <h1>Teaching Guitar Triads</h1>
+  <p>Ready-to-use lesson ideas that turn the interactive triad mapper into clear, memorable student experiences.</p>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <span><strong>Duration:</strong> 45–60 min (or 20 min mini-version)</span>
+    <span><strong>Level:</strong> Beginner → Intermediate</span>
+    <span><strong>Materials:</strong> This HTML file (projected or on devices), guitars, optional phone for recording</span>
+  </div>
+
+  <section>
+    <h2>Lesson Goals</h2>
+    <p>Pick 1–2 per session so the lesson stays focused:</p>
+    <ul>
+      <li>Understand what a triad is and how the four qualities are built</li>
+      <li>See and hear the difference between major and minor</li>
+      <li>Locate any major/minor triad anywhere on the neck</li>
+      <li>Use inversions for smooth chord changes</li>
+      <li>Connect open chords to the smaller triad shapes</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Suggested Lesson Flow (45–60 min)</h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="time">0–5 min · Warm-up</div>
+        <h4>Context from songs they know</h4>
+        <p>Play a simple progression students already know (e.g. G–Em–C–D or Am–F–C–G). Ask:</p>
+        <ul>
+          <li>“These chords are all made of only three notes. Can you hear that?”</li>
+          <li>“What changes when we go from G to Em?”</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time">5–15 min · Concept</div>
+        <h4>What is a triad? The four qualities</h4>
+        <p>Open the <strong>Guide</strong> page to “What is a Triad?” and “The Four Qualities”. Keep it short and visual:</p>
+        <ul>
+          <li>Root + 3rd + 5th</li>
+          <li>Major = bright (R – M3 – P5)</li>
+          <li>Minor = darker (R – m3 – P5)</li>
+        </ul>
+        <p>Point out the colour legend: green = root, blue/purple = 3rd, amber = 5th. Students should be able to point to each colour and name its role.</p>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time">15–35 min · Interactive discovery</div>
+        <h4>Use the Triad Mapper (the strongest part)</h4>
+        <p>Project the tool or have students open it on phones/tablets.</p>
+        <ol>
+          <li>Choose a familiar open chord (start with <strong>C major</strong> or <strong>A minor</strong>).</li>
+          <li>Look at the full fretboard together. Ask:
+            <ul>
+              <li>“Where is the root on the low E string?”</li>
+              <li>“How many places can you find the same three notes?”</li>
+            </ul>
+          </li>
+          <li>Switch Major ↔ Minor and watch the 3rd move. Students hear <em>and</em> see the difference immediately.</li>
+          <li>Call-out game: students name a root (“D major!” / “F# minor!”). Race to find the nearest shape on strings 1-2-3.</li>
+        </ol>
+        <div class="tip">
+          <strong>Teacher tip:</strong> Stay on the top three strings at first. The full neck can overwhelm beginners.
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time">35–50 min · Playing application</div>
+        <h4>Smooth voice-leading</h4>
+        <p>Give a simple two-chord vamp (Am–F or C–G). Rules:</p>
+        <ul>
+          <li>Stay on the top three strings only</li>
+          <li>Change chords by moving to the nearest inversion</li>
+          <li>Goal: almost no jumping — notes move 1–2 frets max</li>
+        </ul>
+        <p>Optional upgrade: arpeggiate the triads instead of strumming. Instant melodic material that perfectly outlines the harmony.</p>
+      </div>
+
+      <div class="timeline-item">
+        <div class="time">50–60 min · Cool-down &amp; take-home</div>
+        <h4>Personal mapping task</h4>
+        <p>Each student picks one chord they struggle with, maps it in the tool, and writes down three places they can play it between frets 0–12. Share one discovery with a partner before leaving.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Differentiation</h2>
+    <div class="diff-grid">
+      <div class="diff-card beginner">
+        <h4>Beginner</h4>
+        <p>Only major + minor. Only strings 1-2-3. Only root position first. Link every shape back to an open chord they already know.</p>
+      </div>
+      <div class="diff-card intermediate">
+        <h4>Intermediate</h4>
+        <p>All three inversions. Move between two chords with smooth voice leading. Introduce a second string set (2-3-4).</p>
+      </div>
+      <div class="diff-card advanced">
+        <h4>Advanced</h4>
+        <p>Full neck. Add diminished/augmented later. Create a 4-bar progression using only triads. Solo by arpeggiating the shapes.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Classroom Activities &amp; Games</h2>
+
+    <div class="activity-box">
+      <h4><span class="tag">GAME</span> Find the Root</h4>
+      <p>Point to any green note on the projected fretboard. Students call out the string and fret. Builds instant root awareness.</p>
+    </div>
+
+    <div class="activity-box">
+      <h4><span class="tag">GAME</span> Call-and-Response</h4>
+      <p>You name a chord + inversion (“A minor, first inversion”). Students have 5 seconds to play it. Increase speed as they improve.</p>
+    </div>
+
+    <div class="activity-box">
+      <h4><span class="tag">EAR</span> Quality Switch</h4>
+      <p>Play a triad shape, then lower or raise the 3rd. Students identify major vs minor by ear before looking at their hands.</p>
+    </div>
+
+    <div class="activity-box">
+      <h4><span class="tag">CREATIVE</span> Record the Smooth Version</h4>
+      <p>Have a student (or the group) play Am–F–C–G using only top-three-string triads. Record on a phone. Compare to the open-chord version. Very motivating.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>20-Minute Mini-Lesson</h2>
+    <p>When you only have a short slot:</p>
+    <ol>
+      <li>Open the tool → C major</li>
+      <li>Students play the three highest notes of open C</li>
+      <li>Switch the tool to C minor → students lower the 3rd</li>
+      <li>Find the same C major triad around frets 8–10</li>
+      <li>Play C – Am – F – G using only top-three-string triads</li>
+    </ol>
+    <p>That’s usually enough for one solid, memorable session.</p>
+  </section>
+
+  <section>
+    <h2>Common Pitfalls to Watch For</h2>
+    <ul>
+      <li>Students memorise shapes without knowing which note is the root — always ask them to point to the green note.</li>
+      <li>Jumping straight to the whole neck. Stay on one string set until it feels automatic.</li>
+      <li>Ignoring the sound of inversions. Have them play root position vs 1st vs 2nd and describe the difference.</li>
+      <li>Forgetting the G–B string quirk (major 3rd instead of perfect 4th). Flag it early when shapes cross those strings.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Quick Reference — Suggested Progressions</h2>
+    <div class="progression">
+      <div class="chord-box">Am</div><span class="arrow">→</span>
+      <div class="chord-box">F</div><span class="arrow">→</span>
+      <div class="chord-box">C</div><span class="arrow">→</span>
+      <div class="chord-box">G</div>
+    </div>
+    <p style="margin-top:8px;color:var(--text-muted);font-size:0.9rem;">Also try: G–Em–C–D · C–G–Am–F · Dm–G–C · Em–C–G–D</p>
+    <div class="tip">
+      <strong>Teaching cue:</strong> “Keep the notes close. If a finger has to jump more than two frets, there’s probably a better inversion nearby.”
+    </div>
+  </section>
+
+  <div class="card highlight">
+    <p><strong>Remember:</strong> The goal is not to memorise dozens of diagrams. The goal is for students to <em>see</em> the three notes of any major or minor chord all over the neck and to grab the nearest useful shape without thinking. The interactive mapper makes that visible in seconds — use it often.</p>
+  </div>
+
+  <footer>
+    <p>Lesson plan designed to accompany the Guitar Triads interactive guide.<br>
+    Switch back to the <button type="button" onclick="showPage('guide')" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:inherit;text-decoration:underline;padding:0;">Guide &amp; Interactive Tool</button> to use the mapper live with students.</p>
+  </footer>
+
+</div><!-- /.container -->
+</div><!-- /#page-lesson -->
+
+<script>
+// Page navigation
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page-nav button').forEach(b => b.classList.remove('active'));
+  const page = document.getElementById('page-' + id);
+  if (page) page.classList.add('active');
+  const btn = document.querySelector('.page-nav button[data-page="' + id + '"]');
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('.page-nav button').forEach(btn => {
+  btn.addEventListener('click', () => showPage(btn.dataset.page));
+});
+</script>
+
+<script>
+(function() {
+  const NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  const DISPLAY = {
+    'C':'C', 'C#':'C#', 'D':'D', 'D#':'D#', 'E':'E', 'F':'F',
+    'F#':'F#', 'G':'G', 'G#':'G#', 'A':'A', 'A#':'A#', 'B':'B'
+  };
+
+  // Index 0 = high e … 5 = low E (display order)
+  const OPEN_STRINGS = [
+    { name: 'e', note: 4 },
+    { name: 'B', note: 11 },
+    { name: 'G', note: 7 },
+    { name: 'D', note: 2 },
+    { name: 'A', note: 9 },
+    { name: 'E', note: 4 }
+  ];
+
+  // String sets as arrays of OPEN_STRINGS indices (high→low in each set)
+  const STRING_SETS = [
+    { label: '1–2–3 (e B G)', indices: [0, 1, 2] },
+    { label: '2–3–4 (B G D)', indices: [1, 2, 3] },
+    { label: '3–4–5 (G D A)', indices: [2, 3, 4] },
+    { label: '4–5–6 (D A E)', indices: [3, 4, 5] }
+  ];
+
+  const OPEN_CHORDS = {
+    'C-major':  { name: 'C',  fretting: 'x32010', hint: 'Classic open C' },
+    'A-major':  { name: 'A',  fretting: 'x02220', hint: 'Open A' },
+    'G-major':  { name: 'G',  fretting: '320003', hint: 'Open G' },
+    'E-major':  { name: 'E',  fretting: '022100', hint: 'Open E' },
+    'D-major':  { name: 'D',  fretting: 'xx0232', hint: 'Open D' },
+    'A-minor':  { name: 'Am', fretting: 'x02210', hint: 'Open Am' },
+    'E-minor':  { name: 'Em', fretting: '022000', hint: 'Open Em' },
+    'D-minor':  { name: 'Dm', fretting: 'xx0231', hint: 'Open Dm' },
+    'F-major':  { name: 'F',  fretting: '133211', hint: 'F barre (E shape)' },
+    'B-minor':  { name: 'Bm', fretting: 'x24432', hint: 'Bm barre (Am shape)' }
+  };
+
+  let currentRoot = 'A';
+  let currentQuality = 'major';
+  let viewMode = 'all'; // 'all' | 'isolate'
+  let currentStringSet = 0;
+  let currentShapeIndex = 0;
+  let shapesCache = []; // shapes for current root/quality/string-set
+
+  function noteIndex(name) { return NOTES.indexOf(name); }
+
+  function getTriadNotes(root, quality) {
+    const r = noteIndex(root);
+    const third = quality === 'major' ? (r + 4) % 12 : (r + 3) % 12;
+    const fifth = (r + 7) % 12;
+    return {
+      root: r, third, fifth,
+      rootName: NOTES[r],
+      thirdName: NOTES[third],
+      fifthName: NOTES[fifth],
+      thirdLabel: quality === 'major' ? '3' : '♭3',
+      thirdClass: quality === 'major' ? 'third' : 'b3'
+    };
+  }
+
+  function roleOf(noteIdx, triad) {
+    if (noteIdx === triad.root) return { cls: 'root', label: 'R', role: 'Root' };
+    if (noteIdx === triad.third) return { cls: triad.thirdClass, label: triad.thirdLabel, role: triad.thirdLabel === '3' ? 'Major 3rd' : 'Minor 3rd' };
+    if (noteIdx === triad.fifth) return { cls: 'fifth', label: '5', role: 'Perfect 5th' };
+    return null;
+  }
+
+  // Find close-position triad shapes on a string set within frets 0–12
+  function findShapes(triad, setIdx) {
+    const set = STRING_SETS[setIdx];
+    const idxs = set.indices; // 3 string indices in OPEN_STRINGS (high to low)
+    const shapes = [];
+    const maxFret = 12;
+
+    // For each possible fret window, look for combinations of the 3 chord tones
+    // We scan the lowest string of the set for each chord tone as potential bass
+    const lowStr = OPEN_STRINGS[idxs[2]]; // lowest of the three
+    const midStr = OPEN_STRINGS[idxs[1]];
+    const highStr = OPEN_STRINGS[idxs[0]];
+
+    const chordTones = [triad.root, triad.third, triad.fifth];
+
+    // Collect candidate frets for each string that land on a chord tone (0–12)
+    function candidates(str) {
+      const out = [];
+      for (let f = 0; f <= maxFret; f++) {
+        const pitch = (str.note + f) % 12;
+        if (chordTones.includes(pitch)) out.push({ fret: f, pitch });
+      }
+      return out;
+    }
+
+    const lowC = candidates(lowStr);
+    const midC = candidates(midStr);
+    const highC = candidates(highStr);
+
+    // Find close-position voicings: span of frets ≤ 4, all three distinct chord tones
+    const seen = new Set();
+    for (const L of lowC) {
+      for (const M of midC) {
+        for (const H of highC) {
+          const pitches = [L.pitch, M.pitch, H.pitch];
+          // Must contain all three chord tones
+          if (!chordTones.every(t => pitches.includes(t))) continue;
+          // Distinct pitches (no doubling required for close triad)
+          if (new Set(pitches).size < 3) continue;
+
+          const frets = [H.fret, M.fret, L.fret]; // high→low to match display
+          const minF = Math.min(...frets);
+          const maxF = Math.max(...frets);
+          if (maxF - minF > 4) continue; // not close enough
+
+          // Determine inversion from bass note
+          let inv = 'Root position';
+          if (L.pitch === triad.third) inv = '1st inversion';
+          else if (L.pitch === triad.fifth) inv = '2nd inversion';
+
+          const key = frets.join(',');
+          if (seen.has(key)) continue;
+          seen.add(key);
+
+          shapes.push({
+            frets: frets,           // [high, mid, low] fret numbers
+            stringIndices: idxs,    // [high, mid, low] OPEN_STRINGS indices
+            inversion: inv,
+            bassPitch: L.pitch,
+            minFret: minF,
+            label: `${inv} · frets ${minF === maxF ? minF : minF + '–' + maxF}`
+          });
+        }
+      }
+    }
+
+    // Sort by position on the neck
+    shapes.sort((a, b) => a.minFret - b.minFret);
+    return shapes;
+  }
+
+  function renderInfoBar(triad) {
+    const bar = document.getElementById('infoBar');
+    const qLabel = currentQuality === 'major' ? 'Major' : 'Minor';
+    const formula = currentQuality === 'major' ? 'R – M3 – P5' : 'R – m3 – P5';
+    bar.innerHTML = `
+      <div class="item">
+        <span class="key">Chord</span>
+        <span class="val">${DISPLAY[currentRoot]}${currentQuality === 'minor' ? 'm' : ''}</span>
+      </div>
+      <div class="item">
+        <span class="key">Quality</span>
+        <span class="val">${qLabel}</span>
+      </div>
+      <div class="item">
+        <span class="key">Formula</span>
+        <span class="val" style="font-family:monospace">${formula}</span>
+      </div>
+      <div class="item">
+        <span class="key">Notes</span>
+        <div class="note-pills">
+          <span class="note-pill root">${triad.rootName}</span>
+          <span class="note-pill ${triad.thirdClass}">${triad.thirdName}</span>
+          <span class="note-pill fifth">${triad.fifthName}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderFullFretboard(triad, isolatedShape) {
+    const container = document.getElementById('fullFretboard');
+    const frets = 13;
+
+    let html = '<div class="fb-header"><div class="fret-label"></div>';
+    for (let f = 0; f < frets; f++) {
+      html += `<div class="fret-label ${f === 0 ? 'open' : ''}">${f === 0 ? 'open' : f}</div>`;
+    }
+    html += '</div>';
+
+    // Build a quick lookup of isolated notes: key = "stringIdx-fret"
+    const isoSet = new Set();
+    if (isolatedShape) {
+      isolatedShape.stringIndices.forEach((sIdx, i) => {
+        isoSet.add(sIdx + '-' + isolatedShape.frets[i]);
+      });
+    }
+
+    OPEN_STRINGS.forEach((str, sIdx) => {
+      html += `<div class="fb-row"><div class="string-name">${str.name}</div>`;
+      for (let f = 0; f < frets; f++) {
+        const pitch = (str.note + f) % 12;
+        const role = roleOf(pitch, triad);
+        const openCls = f === 0 ? 'open-string' : '';
+        const noteName = NOTES[pitch];
+        const isIso = isolatedShape && isoSet.has(sIdx + '-' + f);
+        const dimCls = isolatedShape && role && !isIso ? ' dimmed' : '';
+
+        if (role && (!isolatedShape || isIso)) {
+          html += `<div class="fb-cell ${openCls}"><div class="fb-dot ${role.cls}${isIso ? ' isolated' : ''}" title="${noteName} — ${role.role}">${noteName}</div></div>`;
+        } else if (role && isolatedShape) {
+          // Show ghost of other chord tones lightly
+          html += `<div class="fb-cell ${openCls}"><div class="fb-dot ghost" title="${noteName}">${noteName}</div></div>`;
+        } else {
+          html += `<div class="fb-cell ${openCls}"></div>`;
+        }
+      }
+      html += '</div>';
+    });
+
+    container.innerHTML = html;
+  }
+
+  function populateShapeSelect() {
+    const sel = document.getElementById('shapeSelect');
+    sel.innerHTML = '';
+    if (shapesCache.length === 0) {
+      sel.innerHTML = '<option value="0">No close shapes found</option>';
+      document.getElementById('shapeInfo').textContent = '';
+      return;
+    }
+    shapesCache.forEach((s, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${i + 1}/${shapesCache.length} — ${s.label}`;
+      sel.appendChild(opt);
+    });
+    sel.value = currentShapeIndex;
+    updateShapeInfo();
+  }
+
+  function updateShapeInfo() {
+    const info = document.getElementById('shapeInfo');
+    if (!shapesCache.length) {
+      info.textContent = '';
+      return;
+    }
+    const s = shapesCache[currentShapeIndex];
+    const names = s.frets.map((f, i) => {
+      const str = OPEN_STRINGS[s.stringIndices[i]];
+      return NOTES[(str.note + f) % 12];
+    });
+    // names are high→low; show low→high for musical reading
+    info.textContent = s.inversion + ' · ' + names.slice().reverse().join(' – ');
+  }
+
+  function renderInversionChips(triad) {
+    const chips = document.getElementById('inversionChips');
+    const r = triad.rootName, t = triad.thirdName, f = triad.fifthName;
+    chips.innerHTML = `
+      <div class="inv-chip">
+        <div class="inv-name">Root Position</div>
+        <div class="inv-notes">${r} – ${t} – ${f}</div>
+        <div class="inv-bass">Bass: ${r} (root)</div>
+      </div>
+      <div class="inv-chip">
+        <div class="inv-name">1st Inversion</div>
+        <div class="inv-notes">${t} – ${f} – ${r}</div>
+        <div class="inv-bass">Bass: ${t} (3rd)</div>
+      </div>
+      <div class="inv-chip">
+        <div class="inv-name">2nd Inversion</div>
+        <div class="inv-notes">${f} – ${r} – ${t}</div>
+        <div class="inv-bass">Bass: ${f} (5th)</div>
+      </div>
+    `;
+  }
+
+  function renderOpenPreview() {
+    const preview = document.getElementById('openPreview');
+    const key = currentRoot + '-' + currentQuality;
+    const match = OPEN_CHORDS[key];
+    let cards = '';
+    if (match) {
+      cards += `<div class="open-shape-card"><div class="name">${match.name} (open)</div><div class="fretting">${match.fretting}</div><div class="hint">${match.hint}</div></div>`;
+    }
+    cards += `
+      <div class="open-shape-card"><div class="name">CAGED idea</div><div class="fretting">Use the mapper</div><div class="hint">Find the root on any string, then grab the nearby triad notes</div></div>
+      <div class="open-shape-card"><div class="name">Voice leading tip</div><div class="fretting">Stay local</div><div class="hint">Switch inversions so notes move ≤ 2 frets</div></div>`;
+    preview.innerHTML = `<h4>Related open / common shapes for ${DISPLAY[currentRoot]}${currentQuality === 'minor' ? 'm' : ''}</h4><div class="open-shapes">${cards}</div>`;
+  }
+
+  function rebuildShapes() {
+    const triad = getTriadNotes(currentRoot, currentQuality);
+    shapesCache = findShapes(triad, currentStringSet);
+    if (currentShapeIndex >= shapesCache.length) currentShapeIndex = 0;
+    populateShapeSelect();
+  }
+
+  function update() {
+    const triad = getTriadNotes(currentRoot, currentQuality);
+    renderInfoBar(triad);
+    renderInversionChips(triad);
+    renderOpenPreview();
+
+    if (viewMode === 'isolate') {
+      rebuildShapes();
+      const shape = shapesCache[currentShapeIndex] || null;
+      renderFullFretboard(triad, shape);
+    } else {
+      renderFullFretboard(triad, null);
+    }
+  }
+
+  // --- Event listeners ---
+  document.getElementById('rootSelect').addEventListener('change', (e) => {
+    currentRoot = e.target.value;
+    document.getElementById('openPreset').value = '';
+    currentShapeIndex = 0;
+    update();
+  });
+
+  document.getElementById('btnMajor').addEventListener('click', () => {
+    currentQuality = 'major';
+    document.getElementById('btnMajor').classList.add('active', 'major');
+    document.getElementById('btnMajor').classList.remove('minor');
+    document.getElementById('btnMinor').classList.remove('active', 'minor', 'major');
+    document.getElementById('openPreset').value = '';
+    currentShapeIndex = 0;
+    update();
+  });
+
+  document.getElementById('btnMinor').addEventListener('click', () => {
+    currentQuality = 'minor';
+    document.getElementById('btnMinor').classList.add('active', 'minor');
+    document.getElementById('btnMinor').classList.remove('major');
+    document.getElementById('btnMajor').classList.remove('active', 'major', 'minor');
+    document.getElementById('openPreset').value = '';
+    currentShapeIndex = 0;
+    update();
+  });
+
+  document.getElementById('openPreset').addEventListener('change', (e) => {
+    const val = e.target.value;
+    if (!val) return;
+    const [root, qual] = val.split('-');
+    currentRoot = root;
+    currentQuality = qual;
+    document.getElementById('rootSelect').value = root;
+    if (qual === 'major') {
+      document.getElementById('btnMajor').classList.add('active', 'major');
+      document.getElementById('btnMajor').classList.remove('minor');
+      document.getElementById('btnMinor').classList.remove('active', 'minor', 'major');
+    } else {
+      document.getElementById('btnMinor').classList.add('active', 'minor');
+      document.getElementById('btnMinor').classList.remove('major');
+      document.getElementById('btnMajor').classList.remove('active', 'major', 'minor');
+    }
+    currentShapeIndex = 0;
+    update();
+  });
+
+  // View mode
+  document.getElementById('btnViewAll').addEventListener('click', () => {
+    viewMode = 'all';
+    document.getElementById('btnViewAll').classList.add('active');
+    document.getElementById('btnViewIsolate').classList.remove('active');
+    document.getElementById('isolateControls').style.display = 'none';
+    update();
+  });
+
+  document.getElementById('btnViewIsolate').addEventListener('click', () => {
+    viewMode = 'isolate';
+    document.getElementById('btnViewIsolate').classList.add('active');
+    document.getElementById('btnViewAll').classList.remove('active');
+    document.getElementById('isolateControls').style.display = 'flex';
+    currentShapeIndex = 0;
+    update();
+  });
+
+  document.getElementById('stringSetSelect').addEventListener('change', (e) => {
+    currentStringSet = parseInt(e.target.value, 10);
+    currentShapeIndex = 0;
+    update();
+  });
+
+  document.getElementById('shapeSelect').addEventListener('change', (e) => {
+    currentShapeIndex = parseInt(e.target.value, 10) || 0;
+    updateShapeInfo();
+    const triad = getTriadNotes(currentRoot, currentQuality);
+    renderFullFretboard(triad, shapesCache[currentShapeIndex] || null);
+  });
+
+  document.getElementById('btnPrevShape').addEventListener('click', () => {
+    if (!shapesCache.length) return;
+    currentShapeIndex = (currentShapeIndex - 1 + shapesCache.length) % shapesCache.length;
+    document.getElementById('shapeSelect').value = currentShapeIndex;
+    updateShapeInfo();
+    const triad = getTriadNotes(currentRoot, currentQuality);
+    renderFullFretboard(triad, shapesCache[currentShapeIndex]);
+  });
+
+  document.getElementById('btnNextShape').addEventListener('click', () => {
+    if (!shapesCache.length) return;
+    currentShapeIndex = (currentShapeIndex + 1) % shapesCache.length;
+    document.getElementById('shapeSelect').value = currentShapeIndex;
+    updateShapeInfo();
+    const triad = getTriadNotes(currentRoot, currentQuality);
+    renderFullFretboard(triad, shapesCache[currentShapeIndex]);
+  });
+
+  // --- Large shape view ---
+  function renderLargeDiagram(shape, triad) {
+    const el = document.getElementById('largeDiagram');
+    if (!shape) {
+      el.innerHTML = '<p style="color:var(--text-muted)">No shape selected</p>';
+      return;
+    }
+
+    const strIdxs = shape.stringIndices; // high → low
+    const frets = shape.frets;
+    const minF = Math.max(0, shape.minFret - 1);
+    const maxF = Math.min(12, Math.max(...frets) + 1);
+    const fretCount = maxF - minF + 1;
+
+    // CSS grid: label col + fret columns
+    let html = `<div class="lg-fretboard" style="grid-template-columns: 40px repeat(${fretCount}, 52px);">`;
+
+    strIdxs.forEach((sIdx, i) => {
+      const str = OPEN_STRINGS[sIdx];
+      html += `<div class="lg-label">${str.name}</div>`;
+      for (let f = minF; f <= maxF; f++) {
+        const isNut = f === 0;
+        const pitch = (str.note + f) % 12;
+        const role = roleOf(pitch, triad);
+        const isThisNote = frets[i] === f;
+        const cellCls = isNut ? 'lg-cell nut' : 'lg-cell';
+        if (isThisNote && role) {
+          html += `<div class="${cellCls}"><div class="lg-dot ${role.cls}" title="${NOTES[pitch]} — ${role.role}">${NOTES[pitch]}</div></div>`;
+        } else {
+          html += `<div class="${cellCls}"></div>`;
+        }
+      }
+    });
+
+    // Fret numbers row
+    html += `<div class="lg-label"></div>`;
+    for (let f = minF; f <= maxF; f++) {
+      html += `<div class="lg-fret-num">${f === 0 ? 'open' : f}</div>`;
+    }
+    html += '</div>';
+    el.innerHTML = html;
+  }
+
+  function openLargeView() {
+    if (viewMode !== 'isolate' || !shapesCache.length) return;
+    const shape = shapesCache[currentShapeIndex];
+    const triad = getTriadNotes(currentRoot, currentQuality);
+    const chordName = DISPLAY[currentRoot] + (currentQuality === 'minor' ? 'm' : '');
+    const setLabel = STRING_SETS[currentStringSet].label;
+
+    document.getElementById('largeTitle').textContent = chordName + ' · ' + shape.inversion;
+    document.getElementById('largeSub').textContent = setLabel + ' · ' + shape.label;
+
+    const noteOrder = shape.frets.map((f, i) => {
+      const str = OPEN_STRINGS[shape.stringIndices[i]];
+      return NOTES[(str.note + f) % 12];
+    }).reverse(); // low → high
+
+    document.getElementById('largeMeta').innerHTML =
+      `<strong>Notes (low → high):</strong> ${noteOrder.join(' – ')}` +
+      `<br><strong>Bass:</strong> ${NOTES[shape.bassPitch]} · Shape ${currentShapeIndex + 1} of ${shapesCache.length}`;
+
+    renderLargeDiagram(shape, triad);
+    document.getElementById('largeShapeOverlay').style.display = 'flex';
+    document.getElementById('largeShapeOverlay').setAttribute('aria-hidden', 'false');
+  }
+
+  function closeLargeView() {
+    document.getElementById('largeShapeOverlay').style.display = 'none';
+    document.getElementById('largeShapeOverlay').setAttribute('aria-hidden', 'true');
+  }
+
+  function largeStep(dir) {
+    if (!shapesCache.length) return;
+    currentShapeIndex = (currentShapeIndex + dir + shapesCache.length) % shapesCache.length;
+    document.getElementById('shapeSelect').value = currentShapeIndex;
+    updateShapeInfo();
+    const triad = getTriadNotes(currentRoot, currentQuality);
+    renderFullFretboard(triad, shapesCache[currentShapeIndex]);
+    openLargeView(); // refresh panel
+  }
+
+  document.getElementById('btnShowLarge').addEventListener('click', openLargeView);
+  document.getElementById('btnCloseLarge').addEventListener('click', closeLargeView);
+  document.getElementById('btnLargePrev').addEventListener('click', () => largeStep(-1));
+  document.getElementById('btnLargeNext').addEventListener('click', () => largeStep(1));
+
+  document.getElementById('largeShapeOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'largeShapeOverlay') closeLargeView();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLargeView();
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
