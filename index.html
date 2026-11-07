@@ -771,22 +771,28 @@
 </head>
 <body>
 
-    <!-- Main Navigation Bar -->
-    <nav class="app-navbar">
-        <div class="nav-brand">
-            <span>🎸</span> Guitar Triads Suite
-        </div>
-        <div class="nav-tabs">
-            <button class="nav-tab-btn active" id="tab-tool" onclick="switchTab('tool')">
-                <span>🎛️</span> Interactive Visualizer
-            </button>
-            <button class="nav-tab-btn" id="tab-tutorial" onclick="switchTab('tutorial')">
-                <span>📚</span> Masterclass Tutorial
-            </button>
-        </div>
-    </nav>
+<!-- Main Navigation Bar -->
+<nav class="app-navbar">
+    <div class="nav-brand">
+        <span>🎸</span> Guitar Triads Suite
+    </div>
 
-    <!-- PAGE 1: INTERACTIVE TOOL VIEW -->
+    <div class="nav-tabs">
+        <button class="nav-tab-btn active" id="tab-tool" onclick="switchTab('tool')">
+            <span>🎛️</span> Interactive Visualizer
+        </button>
+
+        <button class="nav-tab-btn" id="tab-tutorial" onclick="switchTab('tutorial')">
+            <span>📚</span> Masterclass Tutorial
+        </button>
+
+        <button class="nav-tab-btn" id="tab-guide"
+                onclick="window.open('https://github.com/Rambleon700/Triads/blob/main/triads-complete-guide.html', '_blank')">
+            <span>📖</span> Complete Triads Guide
+        </button>
+    </div>
+</nav>
+    !-- PAGE 1: INTERACTIVE TOOL VIEW -->
     <main id="page-tool" class="view-page active-view">
         <header class="tool-header">
             <div>
